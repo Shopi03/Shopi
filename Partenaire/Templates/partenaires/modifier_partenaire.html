@@ -1,0 +1,52 @@
+<!-- fichier : shopi_app/templates/shopi_app/modifier_partenaire.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Modifier le partenaire : {{ partenaire.prenom }} {{ partenaire.nom }}</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="message {{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <label>Nom :</label>
+  <input type="text" name="nom" value="{{ valeurs.nom|default:'' }}" required><br>
+
+  <label>Prénom :</label>
+  <input type="text" name="prenom" value="{{ valeurs.prenom|default:'' }}" required><br>
+
+  <label>Pseudo :</label>
+  <input type="text" name="pseudo" value="{{ valeurs.pseudo|default:'' }}" required><br>
+
+  <label>Email :</label>
+  <input type="email" name="mail" value="{{ valeurs.mail|default:'' }}" required><br>
+
+  <label>Genre :</label>
+  <select name="genre">
+    <option value="M" {% if valeurs.genre == 'M' %}selected{% endif %}>Masculin</option>
+    <option value="F" {% if valeurs.genre == 'F' %}selected{% endif %}>Féminin</option>
+  </select><br>
+
+  <label>Date de naissance :</label>
+  <input type="date" name="date_naissance" value="{{ valeurs.date_naissance|date:'Y-m-d' }}" required><br>
+
+  <label>Nouveau mot de passe (laisser vide si inchangé) :</label>
+  <input type="password" name="mot_de_passe"><br>
+
+  <label>Photo de profil :</label>
+  <input type="file" name="profil"><br>
+  {% if partenaire.profil %}
+    <img src="{{ partenaire.profil.url }}" width="100" alt="Profil actuel">
+  {% endif %}
+
+  <button type="submit">Mettre à jour</button>
+</form>
+
+<a href="{% url 'liste_partenaires' %}">Retour à la liste</a>
+{% endblock %}

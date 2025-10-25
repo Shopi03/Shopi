@@ -1,0 +1,48 @@
+<!-- fichier : shopi_app/templates/shopi_app/liste_partenaires.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Liste des partenaires</h2>
+
+<a href="{% url 'creer_partenaire' %}">Créer un nouveau partenaire</a>
+
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Pseudo</th>
+      <th>Email</th>
+      <th>Genre</th>
+      <th>Date de naissance</th>
+      <th>Profil</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for partenaire in partenaires %}
+    <tr>
+      <td>{{ partenaire.id }}</td>
+      <td>{{ partenaire.nom }}</td>
+      <td>{{ partenaire.prenom }}</td>
+      <td>{{ partenaire.pseudo }}</td>
+      <td>{{ partenaire.mail }}</td>
+      <td>{{ partenaire.genre }}</td>
+      <td>{{ partenaire.date_naissance }}</td>
+      <td>
+        {% if partenaire.profil %}
+          <img src="{{ partenaire.profil.url }}" width="50">
+        {% endif %}
+      </td>
+      <td>
+        <a href="{% url 'modifier_partenaire' partenaire.id %}">Modifier</a> |
+        <a href="{% url 'supprimer_partenaire' partenaire.id %}">Supprimer</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

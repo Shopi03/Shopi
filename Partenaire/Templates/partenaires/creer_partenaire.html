@@ -1,0 +1,51 @@
+<!-- fichier : partenaire/templates/partenaire/creer_partenaire.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Créer un nouveau partenaire</h2>
+
+<!-- Affichage des messages (erreurs ou succès) -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="message {{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<!-- Formulaire de création -->
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %} <!-- Protection CSRF -->
+
+  <label>Nom :</label>
+  <input type="text" name="nom" value="{{ valeurs.nom|default:'' }}" required ><br>
+
+  <label>Prénom :</label>
+  <input type="text" name="prenom" value="{{ valeurs.prenom|default:'' }}" required><br>
+
+  <label>Pseudo :</label>
+  <input type="text" name="pseudo" value="{{ valeurs.pseudo|default:'' }}" required><br>
+
+  <label>Email :</label>
+  <input type="email" name="mail" value="{{ valeurs.mail|default:'' }}" required><br>
+
+  <label>Genre :</label>
+  <select name="genre">
+    <option value="M" {% if valeurs.genre == 'M' %}selected{% endif %}>Masculin</option>
+    <option value="F" {% if valeurs.genre == 'F' %}selected{% endif %}>Féminin</option>
+  </select><br>
+
+  <label>Date de naissance :</label>
+  <input type="date" name="date_naissance" value="{{ valeurs.date_naissance|default:'' }}" required><br>
+
+  <label>Mot de passe :</label>
+  <input type="password" name="mot_de_passe" required><br>
+
+  <label>Photo de profil :</label>
+  <input type="file" name="profil"><br>
+
+  <button type="submit">Créer</button>
+</form>
+
+<a href="{% url 'liste_partenaires' %}">Retour à la liste</a>
+{% endblock %}
