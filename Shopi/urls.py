@@ -14,9 +14,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# fichier : SHOPI/urls.py
+
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
+# Pour gérer les fichiers médias (images de profil)
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Inclure les URLS de l'application Partenaire
+    path('', include('Partenaire.urls')),  # toutes les URLs de Partenaire
 ]
+
+# Pour que Django serve les fichiers médias en développement
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
