@@ -15,4 +15,10 @@ urlpatterns = [
 
     # Supprimer un partenaire (on passe l'ID du partenaire)
     path('partenaire/supprimer/<int:partenaire_id>/', views.supprimer_partenaire, name='supprimer_partenaire'),
+
+    # Se connecter au tableau de bord du partenaire
+    path('connexion/', views.login_partenaire, name='login_partenaire'),
+
+    # Permettre au partenaire de se déconnecter
+    path('deconnexion/', views.logout_partenaire, name='logout_partenaire'),
 ]

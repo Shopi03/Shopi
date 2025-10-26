@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Partenaire
 from django.utils import timezone
-from django.contrib.auth.hashers import make_password  # Pour chiffrer le mot de passe
+from django.contrib.auth.hashers import make_password, check_password  # Pour chiffrer le mot de passe
+from .decorators import partenaire_login_required
 
 
 # -------------------------------------------------------------------
@@ -205,6 +206,7 @@ def supprimer_partenaire(request, partenaire_id):
 # -------------------------------------------------------------------
 # 📋 AFFICHAGE DE TOUS LES PARTENAIRES
 # -------------------------------------------------------------------
+@partenaire_login_required
 def liste_partenaires(request):
     """
     Vue affichant la liste de tous les partenaires enregistrés dans la base.
@@ -212,3 +214,58 @@ def liste_partenaires(request):
     partenaires = Partenaire.objects.all().order_by('-date_creation')
     return render(request, 'partenaires/liste_partenaires.html', {'partenaires': partenaires})
 # -------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------
+# ✅ CONNEXION DU PARTENAIRE
+# -------------------------------------------------------------------
+def login_partenaire(request):
+    """
+    Vue permettant à un partenaire de se connecter
+    via son pseudo et son mot de passe.
+    """
+
+    # Si le formulaire est soumis
+    if request.method == "POST":
+        pseudo = request.POST.get('pseudo')
+        mot_de_passe = request.POST.get('mot_de_passe')
+
+        # Vérifier que les champs sont remplis
+        if not pseudo or not mot_de_passe:
+            messages.error(request, "Veuillez remplir tous les champs.")
+            return render(request, 'partenaires/auth/login.html', {'pseudo': pseudo})
+
+        try:
+            # Vérifier si le pseudo existe
+            partenaire = Partenaire.objects.get(pseudo=pseudo)
+
+            # Vérifier le mot de passe haché
+            if check_password(mot_de_passe, partenaire.mot_de_passe):
+                # Enregistrer la session utilisateur
+                request.session['partenaire_id'] = partenaire.id
+                request.session['partenaire_nom'] = partenaire.nom
+                messages.success(request, f"Bienvenue {partenaire.prenom} 👋")
+                return redirect('liste_partenaires')  # ou une page d'accueil
+            else:
+                messages.error(request, "Mot de passe incorrect.")
+        except Partenaire.DoesNotExist:
+            messages.error(request, "Aucun compte trouvé avec ce pseudo.")
+
+    # Si on arrive sur la page sans envoi (GET)
+    return render(request, 'partenaires/auth/login.html')
+
+
+# -------------------------------------------------------------------
+# 🚪 DÉCONNEXION DU PARTENAIRE
+# -------------------------------------------------------------------
+def logout_partenaire(request):
+    """
+    Déconnecte le partenaire en supprimant sa session.
+    """
+    if 'partenaire_id' in request.session:
+        del request.session['partenaire_id']
+        del request.session['partenaire_nom']
+    messages.info(request, "Vous êtes maintenant déconnecté.")
+    return redirect('login_partenaire')
+
+
