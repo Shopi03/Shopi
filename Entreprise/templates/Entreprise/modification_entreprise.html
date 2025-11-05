@@ -1,18 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Modifier Entreprise</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
-
 <body>
-    <h1>Modifier l'entreprise</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %} {{ form.as_p }}
-        <button type="submit">Enregistrer les modifications</button>
-    </form>
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Modifier {{ entreprise.nom }}</h2>
+    <div class="card shadow p-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100 mt-3">Mettre à jour</button>
+        </form>
+    </div>
+    <div class="text-center mt-3">
+        <a href="{% url 'liste_entreprise' %}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
 </body>
-
 </html>
