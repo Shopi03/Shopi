@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Produits</title>
+</head>
+
+<body>
+    <h1>Liste des produits</h1>
+    <ul>
+        {% for produit in produits %}
+        <li>{{ produit.nom }} - {{ produit.prix }} €
+            <a href="{% url 'modification_produit' produit.id %}">Modifier</a>
+            <a href="{% url 'suppression_produit' produit.id %}">Supprimer</a>
+        </li>
+        g {% endfor %}
+    </ul>
+    <a href="{% url 'ajout_produit' %}">Ajouter un nouveau produit</a>
+</body>
+
+</html>

@@ -8,5 +8,3 @@ class Administrateur(models.Model):
     email = models.EmailField(unique=True)
     mot_de_passe = models.CharField(max_length=100)
     
-
-    

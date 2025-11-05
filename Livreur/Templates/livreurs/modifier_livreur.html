@@ -1,0 +1,61 @@
+<!-- fichier : shopi_app/templates/shopi_app/modifier_livreur.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Modifier le livreur : {{ livreur.prenom }} {{ livreur.nom }}</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="message {{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <label>Nom :</label>
+  <input type="text" name="nom" value="{{ valeurs.nom|default:'' }}" required><br>
+
+  <label>Prénom :</label>
+  <input type="text" name="prenom" value="{{ valeurs.prenom|default:'' }}" required><br>
+
+  <label>Identifiant de la pièce d'identité :</label>
+  <input type="text" name="identifiant" value="{{ valeurs.identifiant|default:'' }}" required><br>
+
+  <label>Email :</label>
+  <input type="email" name="mail" value="{{ valeurs.mail|default:'' }}" required><br>
+
+  <label>Téléphone :</label>
+  <input type="phone" name="telephone" value="{{ valeurs.telephone|default:'' }}" required><br>
+
+  <label>Zone de Livraison :</label>
+  <input type="text" name="zone_livraison" value="{{ valeurs.zone_livraison|default:'' }}" required><br>
+
+  <label>Vehicule :</label>
+  <input type="text" name="vehicule" value="{{ valeurs.vehicule|default:'' }}" required><br>
+
+  <label>Genre :</label>
+  <select name="genre">
+    <option value="M" {% if valeurs.genre == 'M' %}selected{% endif %}>Masculin</option>
+    <option value="F" {% if valeurs.genre == 'F' %}selected{% endif %}>Féminin</option>
+  </select><br>
+
+  <label>Date de naissance :</label>
+  <input type="date" name="date_naissance" value="{{ valeurs.date_naissance|date:'Y-m-d' }}" required><br>
+
+  <label>Nouveau mot de passe (laisser vide si inchangé) :</label>
+  <input type="password" name="mot_de_passe"><br>
+
+  <label>Photo de profil :</label>
+  <input type="file" name="profil"><br>
+  {% if livreur.profil %}
+    <img src="{{ livreur.profil.url }}" width="100" alt="Profil actuel">
+  {% endif %}
+
+  <button type="submit">Mettre à jour</button>
+</form>
+
+<a href="{% url 'liste_livreurs' %}">Retour à la liste</a>
+{% endblock %}

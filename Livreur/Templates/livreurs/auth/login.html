@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Connexion Livreur</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label>E-mail</label>
+    <input type="email" name="mail" value="{{ mail|default:'' }}">
+
+    <label>Mot de passe</label>
+    <input type="password" name="mot_de_passe">
+
+    <button type="submit">Se connecter</button>
+</form>
+{% endblock %}
