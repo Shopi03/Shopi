@@ -1,0 +1,16 @@
+# Fichiers Python à ignorer
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Base de données locale
+db.sqlite3
+
+# Fichiers de migrations compilés
+migrations/__pycache__/
+*.log
+
+# Environnements virtuels
+venv/
+.env/
