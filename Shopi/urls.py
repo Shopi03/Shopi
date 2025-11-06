@@ -30,27 +30,16 @@ urlpatterns = [
     path('partenaire/', include('Partenaire.urls')),  # toutes les URLs de Partenaire
     path('livreur/', include('Livreur.urls')),  # toutes les URLs de Livreur
     path('entreprise/', include("Entreprise.urls")),
+    path("client/", include("Client.urls")),
 ]
 
 # Pour que Django serve les fichiers médias en développement
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-<<<<<<< HEAD
-
-from django.urls import path,include
-from django.conf import settings
-from django.conf.urls.static import static
 
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('entreprise/', include("Entreprise.urls")),
-    path("client/", include("Client.urls")),
 
-]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-=======
->>>>>>> 1c872f7ba735c31c2d4b9434f045b31a43134a2f
+
+
+
