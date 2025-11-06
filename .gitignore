@@ -1,0 +1,18 @@
+# Fichiers Python
+__pycache__/
+*.py[cod]
+
+# Fichiers Django
+*.sqlite3
+db.sqlite3
+
+# Environnements virtuels
+env/
+venv/
+
+# VS Code
+.vscode/
+
+# Fichiers système
+*.log
+*.DS_Store
