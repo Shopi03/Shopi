@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Fichiers Python
 __pycache__/
 *.py[cod]
@@ -16,3 +17,21 @@ venv/
 # Fichiers système
 *.log
 *.DS_Store
+=======
+# Fichiers Python à ignorer
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Base de données locale
+db.sqlite3
+
+# Fichiers de migrations compilés
+migrations/__pycache__/
+*.log
+
+# Environnements virtuels
+venv/
+.env/
+>>>>>>> 0d5339b4e67d7a72197c284195b6381847e741cd

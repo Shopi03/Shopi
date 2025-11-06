@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Entreprises</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">Liste des Entreprises</h2>
+    <div class="text-end mb-3">
+        <a href="{% url 'inscription_entreprise' %}" class="btn btn-success">+ Ajouter une entreprise</a>
+    </div>
+
+    {% if entreprises %}
+    <table class="table table-striped table-bordered align-middle shadow">
+        <thead class="table-primary text-center">
+            <tr>
+                <th>Logo</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Date création</th>
+                <th>Actif</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for e in entreprises %}
+            <tr>
+                <td class="text-center">
+                    {% if e.logo %}
+                        <img src="{{ e.logo.url }}" width="60" height="60" class="rounded-circle">
+                    {% else %}
+                        <img src="{% static 'images/default_logo.png' %}" width="60" height="60" class="rounded-circle">
+                    {% endif %}
+                </td>
+                <td>{{ e.nom }}</td>
+                <td>{{ e.email }}</td>
+                <td>{{ e.telephone }}</td>
+                <td>{{ e.date_creation }}</td>
+                <td>{{ e.actif|yesno:"✅,❌" }}</td>
+                <td class="text-center">
+                    <a href="{% url 'modification_entreprise' e.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="alert alert-info text-center">Aucune entreprise enregistrée.</div>
+    {% endif %}
+</div>
+</body>
+</html>
