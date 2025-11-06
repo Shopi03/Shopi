@@ -7,6 +7,10 @@ from .decorateur import entreprise_login_required
 from django.contrib import messages
 
 
+#affichage de tableau de boad 
+def tableau_bord(request):
+    return render(request, 'Entreprise/tableau_de_bord.entreprise.html')
+
 # Create your views here.
 # tableau de bord
 def home(request):
