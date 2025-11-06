@@ -51,7 +51,7 @@ class Produit(models.Model):
 class Commande(models.Model):
     entreprise = models.ForeignKey(Entreprise, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    livreur = models.ForeignKey(Livreur,null=True, blank=True,on_delete=models.CASCADE)
+    #
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     quantite = models.PositiveIntegerField()
     date_commande = models.DateField(auto_now_add=True)

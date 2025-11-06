@@ -5,14 +5,20 @@ from . import views
 
 urlpatterns = [
     # Afficher tous les partenaires
-    path('partenaires/', views.liste_partenaires, name='liste_partenaires'),
+    path('', views.liste_partenaires, name='liste_partenaires'),
 
     # Créer un nouveau partenaire
-    path('partenaire/creer_partenaire/', views.creer_partenaire, name='creer_partenaire'),
+    path('creer_partenaire/', views.creer_partenaire, name='creer_partenaire'),
 
     # Modifier un partenaire existant (on passe l'ID du partenaire)
-    path('partenaire/modifier/<int:partenaire_id>/', views.modifier_partenaire, name='modifier_partenaire'),
+    path('modifier/<int:partenaire_id>/', views.modifier_partenaire, name='modifier_partenaire'),
 
     # Supprimer un partenaire (on passe l'ID du partenaire)
-    path('partenaire/supprimer/<int:partenaire_id>/', views.supprimer_partenaire, name='supprimer_partenaire'),
+    path('supprimer/<int:partenaire_id>/', views.supprimer_partenaire, name='supprimer_partenaire'),
+
+    # Se connecter au tableau de bord du partenaire
+    path('connexion/', views.login_partenaire, name='login_partenaire'),
+
+    # Permettre au partenaire de se déconnecter
+    path('deconnexion/', views.logout_partenaire, name='logout_partenaire'),
 ]
