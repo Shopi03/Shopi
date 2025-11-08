@@ -14,7 +14,8 @@ urlpatterns = [
     path("inscription_entreprise/",views.inscription_entreprise, name="inscription_entreprise"),
     path("modification_entreprise/<int:id>/",views.modification_entreprise, name="modification_entreprise"),
     path('liste_entreprise/', views.liste_entreprise, name='liste_entreprise'),
-        path('suppression_entreprise/<int:id>/', views.suppression_entreprise, name='suppression_entreprise'),
+    path('suppression_entreprise/<int:id>/', views.suppression_entreprise, name='suppression_entreprise'),
+    path("contenu/",views.contenu,name="contenu"),
 
 
 

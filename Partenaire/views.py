@@ -7,19 +7,22 @@ from .models import Partenaire
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password  # Pour chiffrer le mot de passe
 from .decorators import partenaire_login_required
+from django.http import JsonResponse
 
 
 # -------------------------------------------------------------------
-# ✅ CRÉATION D’UN PARTENAIRE
+#  CRÉATION D’UN PARTENAIRE
 # -------------------------------------------------------------------
 def creer_partenaire(request):
+    """
+    Création d'un partenaire après validation multi-étapes (formulaire complet envoyé à la fin).
+    Cette vue reste compatible avec les vérifications AJAX côté client.
+    """
 
-    """
-    Création d'un partenaire avec conservation des valeurs saisies en cas d'erreur.
-    """
     valeurs = {}  # dictionnaire pour garder les valeurs saisies
-    
+
     if request.method == "POST":
+        # Récupération des champs
         nom = request.POST.get('nom')
         prenom = request.POST.get('prenom')
         pseudo = request.POST.get('pseudo')
@@ -29,8 +32,7 @@ def creer_partenaire(request):
         mot_de_passe = request.POST.get('mot_de_passe')
         profil = request.FILES.get('profil')
 
-
-        # Stocker les valeurs dans le dictionnaire (sauf mot de passe pour sécurité)
+        # Stocker les valeurs (sauf mot de passe)
         valeurs = {
             'nom': nom,
             'prenom': prenom,
@@ -40,36 +42,36 @@ def creer_partenaire(request):
             'date_naissance': date_naissance_str
         }
 
-        # Vérifications
+        #  Vérification des champs requis
         if not all([nom, prenom, pseudo, mail, genre, date_naissance_str, mot_de_passe]):
             messages.error(request, "Tous les champs obligatoires doivent être remplis.")
-            return render(request, 'partenaires/creer_partenaire.html', {'valeurs': valeurs})
+            return render(request, 'partenaires/auth/creer.partenaire.html', {'valeurs': valeurs})
 
-        # Conversion date
+        #  Conversion de la date
         try:
             date_naissance = date.fromisoformat(date_naissance_str)
         except ValueError:
             messages.error(request, "La date de naissance est invalide.")
-            return render(request, 'partenaires/creer_partenaire.html', {'valeurs': valeurs})
+            return render(request, 'partenaires/auth/creer.partenaire.html', {'valeurs': valeurs})
 
-        # Vérification de l'âge
+        #  Vérification de l’âge minimal
         today = date.today()
         age = today.year - date_naissance.year - ((today.month, today.day) < (date_naissance.month, date_naissance.day))
         if age < 20:
             messages.error(request, "Vous devez avoir au moins 20 ans pour vous inscrire.")
-            return render(request, 'partenaires/creer_partenaire.html', {'valeurs': valeurs})
+            return render(request, 'partenaires/auth/creer.partenaire.html', {'valeurs': valeurs})
 
-        # Vérification pseudo
+        #  Vérification pseudo (doublon)
         if Partenaire.objects.filter(pseudo=pseudo).exists():
             messages.error(request, "Ce pseudo est déjà utilisé.")
-            return render(request, 'partenaires/creer_partenaire.html', {'valeurs': valeurs})
+            return render(request, 'partenaires/auth/creer.partenaire.html', {'valeurs': valeurs})
 
-        # Vérification mail
+        #  Vérification e-mail (doublon)
         if Partenaire.objects.filter(mail=mail).exists():
-            messages.error(request, "cet e-mail est déjà utilisé.")
-            return render(request, 'partenaires/creer_partenaire.html', {'valeurs': valeurs})
+            messages.error(request, "Cet e-mail est déjà utilisé.")
+            return render(request, 'partenaires/auth/creer.partenaire.html', {'valeurs': valeurs})
 
-        # Création du partenaire
+        #  Enregistrement final
         partenaire = Partenaire.objects.create(
             nom=nom,
             prenom=prenom,
@@ -82,16 +84,41 @@ def creer_partenaire(request):
         )
 
         messages.success(request, f"Le partenaire {partenaire.prenom} a été ajouté avec succès !")
-        return redirect('liste_partenaires')
+        return redirect('login_partenaire')
 
-    # GET
-    return render(request, 'partenaires/creer_partenaire.html', {'valeurs': valeurs})
-
-# -------------------------------------------------------------------
-
+    #  GET → Afficher le formulaire multi-étapes
+    return render(request, 'partenaires/auth/creer.partenaire.html', {'valeurs': valeurs})
 
 # -------------------------------------------------------------------
-# ✏️ MODIFICATION D’UN PARTENAIRE
+
+    
+# Vérification AJAX du mail
+def verifier_email(request):
+    email = request.GET.get('email')
+    if not email:
+        return JsonResponse({'disponible': False, 'message': 'E-mail vide.'})
+
+    existe = Partenaire.objects.filter(mail=email).exists()
+    if existe:
+        return JsonResponse({'disponible': False, 'message': 'Cet e-mail est déjà utilisé.'})
+    else:
+        return JsonResponse({'disponible': True, 'message': 'E-mail disponible.'})
+
+# Vérification AJAX du pseudo
+def verifier_pseudo(request):
+    pseudo = request.GET.get('pseudo')
+    if not pseudo:
+        return JsonResponse({'disponible': False, 'message': 'Pseudo vide.'})
+
+    existe = Partenaire.objects.filter(pseudo=pseudo).exists()
+    if existe:
+        return JsonResponse({'disponible': False, 'message': 'Ce pseudo existe déjà.'})
+    else:
+        return JsonResponse({'disponible': True, 'message': 'Pseudo disponible.'})
+
+
+# -------------------------------------------------------------------
+#  MODIFICATION D’UN PARTENAIRE
 # -------------------------------------------------------------------
 def modifier_partenaire(request, partenaire_id):
     """
@@ -159,7 +186,7 @@ def modifier_partenaire(request, partenaire_id):
             messages.error(request, "Cet e-mail est déjà utilisé.")
             return render(request, 'partenaires/modifier_partenaire.html', {'valeurs': valeurs, 'partenaire': partenaire})
 
-        # ✅ Si tout est correct, on met à jour
+        #  Si tout est correct, on met à jour
         partenaire.nom = nom
         partenaire.prenom = prenom
         partenaire.pseudo = pseudo
@@ -185,7 +212,7 @@ def modifier_partenaire(request, partenaire_id):
 
 
 # -------------------------------------------------------------------
-# ❌ SUPPRESSION D’UN PARTENAIRE
+#  SUPPRESSION D’UN PARTENAIRE
 # -------------------------------------------------------------------
 def supprimer_partenaire(request, partenaire_id):
     """
@@ -204,7 +231,7 @@ def supprimer_partenaire(request, partenaire_id):
 
 
 # -------------------------------------------------------------------
-# 📋 AFFICHAGE DE TOUS LES PARTENAIRES
+#  AFFICHAGE DE TOUS LES PARTENAIRES
 # -------------------------------------------------------------------
 @partenaire_login_required
 def liste_partenaires(request):
@@ -215,9 +242,15 @@ def liste_partenaires(request):
     return render(request, 'partenaires/liste_partenaires.html', {'partenaires': partenaires})
 # -------------------------------------------------------------------
 
+def dashboard_partenaire(request):
+    """
+    Vue affichant le tableau de bord du partenaire connecté.
+    """
+    return render(request, 'partenaires/dashboard.partenaire.html')
+
 
 # -------------------------------------------------------------------
-# ✅ CONNEXION DU PARTENAIRE
+#  CONNEXION DU PARTENAIRE
 # -------------------------------------------------------------------
 def login_partenaire(request):
     """
@@ -244,19 +277,19 @@ def login_partenaire(request):
                 # Enregistrer la session utilisateur
                 request.session['partenaire_id'] = partenaire.id
                 request.session['partenaire_nom'] = partenaire.nom
-                messages.success(request, f"Bienvenue {partenaire.prenom} 👋")
+                messages.success(request, f"Bienvenue {partenaire.prenom} ")
                 return redirect('liste_partenaires')  # ou une page d'accueil
             else:
-                messages.error(request, "Mot de passe incorrect.")
+                messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
         except Partenaire.DoesNotExist:
-            messages.error(request, "Aucun compte trouvé avec ce pseudo.")
+            messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
 
     # Si on arrive sur la page sans envoi (GET)
     return render(request, 'partenaires/auth/login.html')
 
 
 # -------------------------------------------------------------------
-# 🚪 DÉCONNEXION DU PARTENAIRE
+#  DÉCONNEXION DU PARTENAIRE
 # -------------------------------------------------------------------
 def logout_partenaire(request):
     """
@@ -267,5 +300,9 @@ def logout_partenaire(request):
         del request.session['partenaire_nom']
     messages.info(request, "Vous êtes maintenant déconnecté.")
     return redirect('login_partenaire')
+
+
+
+
 
 

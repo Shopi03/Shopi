@@ -11,6 +11,9 @@ from django.contrib import messages
 def tableau_bord(request):
     return render(request, 'Entreprise/tableau_de_bord.entreprise.html')
 
+def contenu(request):
+    return render(request,"Entreprise/composant/entreprise/contenu.html")
+
 # Create your views here.
 # tableau de bord
 def home(request):
