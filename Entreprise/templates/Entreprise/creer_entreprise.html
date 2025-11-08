@@ -1,0 +1,234 @@
+{% extends 'auth/base.simple.html' %} {% load static %} {% block contenu %}
+
+<div class="main-content">
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+
+
+            <div class="row">
+                <div class="col-xl-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">ÉtAPE DE CREATION D'ENTREPRISE</h4>
+                        </div>
+                        <!-- end card header -->
+                        <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data" class="form-steps" autocomplete="off">
+                                {% csrf_token %}
+                                <div class="text-center pt-3 pb-4 mb-1">
+                                    <h5>Création de compte Entreprise</h5>
+                                </div>
+
+                                <div id="custom-progress-bar" class="progress-nav mb-4">
+                                    <div class="progress" style="height: 1px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <ul class="nav nav-pills progress-bar-tab custom-nav" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill active" data-progressbar="custom-progress-bar" id="pills-gen-info-tab" data-bs-toggle="pill" data-bs-target="#pills-gen-info" type="button" role="tab" aria-controls="pills-gen-info" aria-selected="true">1</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill" data-progressbar="custom-progress-bar" id="pills-info-desc-tab" data-bs-toggle="pill" data-bs-target="#pills-info-desc" type="button" role="tab" aria-controls="pills-info-desc" aria-selected="false">2</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill" data-progressbar="custom-progress-bar" id="pills-success-tab" data-bs-toggle="pill" data-bs-target="#pills-success" type="button" role="tab" aria-controls="pills-success" aria-selected="false">3</button>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="tab-content">
+                                    <!-- ====================== ÉTAPE 1 ====================== -->
+                                    <div class="tab-pane fade show active" id="pills-gen-info" role="tabpanel" aria-labelledby="pills-gen-info-tab">
+                                        <div>
+                                            <div class="mb-4">
+                                                <h5 class="mb-1">INFORMATION GÉNÉRALE</h5>
+                                                <p class="text-muted">Remplissez toutes les informations ci-dessous</p>
+                                            </div>
+
+                                            <div class="row">
+                                                <!-- Nom -->
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="gen-info-email-input">Nom de l'entreprise</label>
+                                                        <input type="text" class="form-control {% if errors.nom %}is-invalid{% endif %}" id="gen-info-email-input" name="nom" value="{{ data.nom }}" placeholder="Entrer le nom de l'entreprise" required>                                                        {% if errors.nom %}
+                                                        <div class="invalid-feedback">{{ errors.nom }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Email -->
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="gen-info-username-input">Email</label>
+                                                        <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="gen-info-username-input" name="email" value="{{ data.email }}" placeholder="Entrer le email" required>
+                                                         {% if errors.email %}
+                                                        <div class="invalid-feedback">{{ errors.email }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Téléphone -->
+                                            <div class="mb-3">
+                                                <label class="form-label" for="gen-info-password-input">Téléphone</label>
+                                                <input type="text" class="form-control {% if errors.telephone %}is-invalid{% endif %}" id="gen-info-password-input" name="telephone" value="{{ data.telephone }}" placeholder="Entrer le numéro de téléphone" required>                                                
+                                                {% if errors.telephone %}
+                                                <div class="invalid-feedback">{{ errors.telephone }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-start gap-3 mt-4">
+                                            <button type="button" class="btn btn-success btn-label right ms-auto nexttab nexttab" data-nexttab="pills-info-desc-tab">
+                    <i class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Suivant
+                </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- ====================== ÉTAPE 2 ====================== -->
+                                    <div class="tab-pane fade" id="pills-info-desc" role="tabpanel" aria-labelledby="pills-info-desc-tab">
+                                        <div class="text-center">
+                                            <div class="profile-user position-relative d-inline-block mx-auto mb-2">
+                                                <img src="{% static 'assets/images/users/user-dummy-img.jpg' %}" class="rounded-circle avatar-lg img-thumbnail user-profile-image" alt="user-profile-image">
+                                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                                    <input id="profile-img-file-input" type="file" class="profile-img-file-input" accept="image/png, image/jpeg" name="logo">
+                                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                            <span class="avatar-title rounded-circle bg-light text-body">
+                                <i class="ri-camera-fill"></i>
+                            </span>
+                        </label>
+                                                </div>
+                                            </div>
+                                            <h5 class="fs-14">Ajouter un logo</h5>
+                                            {% if errors.logo %}
+                                            <div class="text-danger small">{{ errors.logo }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div>
+                                            <label class="form-label" for="gen-info-description-input">Description</label>
+                                            <textarea class="form-control {% if errors.description %}is-invalid{% endif %}" id="gen-info-description-input" name="description" rows="2" placeholder="Veuillez entrer une description de votre entreprise" required>{{ data.description }}</textarea>                                            
+                                            {% if errors.description %}
+                                            <div class="invalid-feedback">{{ errors.description }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Mot de passe -->
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-password-input">Mot de passe</label>
+                                            <input type="password" class="form-control {% if errors.mot_de_passe %}is-invalid{% endif %}" id="gen-info-password-input" name="mot_de_passe" placeholder="Entrer le mot de passe" required> 
+                                            {% if errors.mot_de_passe %}
+                                            <div class="invalid-feedback">{{ errors.mot_de_passe }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Confirmation -->
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-password-confirm-input">Confirmation du mot de passe</label>
+                                            <input type="password" class="form-control {% if errors.mot_de_passe_confirmation %}is-invalid{% endif %}" id="gen-info-password-confirm-input" name="mot_de_passe_confirmation" placeholder="Confirmer le mot de passe" required>                                           
+                                             {% if errors.mot_de_passe_confirmation %}
+                                            <div class="invalid-feedback">{{ errors.mot_de_passe_confirmation }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="d-flex align-items-start gap-3 mt-4">
+                                            <button type="button" class="btn btn-link text-decoration-none btn-label previestab" data-previous="pills-gen-info-tab">
+                    <i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>Retour
+                </button>
+
+                                            <button type="submit" class="btn btn-success btn-label right ms-auto">
+                    <i class="ri-check-line label-icon align-middle fs-16 ms-2"></i>Soumettre
+                </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- ====================== ÉTAPE 3 ====================== -->
+                                    <div class="tab-pane fade" id="pills-success" role="tabpanel" aria-labelledby="pills-success-tab">
+                                        <div class="text-center">
+                                            <div class="mb-4">
+                                                <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px"></lord-icon>
+                                            </div>
+                                            <h5>Bien fait !</h5>
+                                            <p class="text-muted">Votre compte a été créé avec succès.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                        <!-- end card body -->
+                    </div>
+                    <!-- end card -->
+                </div>
+                <!-- end col -->
+
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+
+
+            <!-- end row -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+
+</div>
+{% endblock contenu %} {% block footer.simple %}
+
+
+<!-- JAVASCRIPT -->
+<script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+<script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+<script src="{% static 'assets/libs/feather-icons/feather.min.js' %}"></script>
+<script src="{% static 'assets/js/pages/plugins/lord-icon-2.1.0.js' %}"></script>
+<script src="{% static 'assets/js/plugins.js' %}"></script>
+
+<!-- form wizard init -->
+<script src="{% static 'assets/js/pages/form-wizard.init.js' %}"></script>
+
+<!-- App js -->
+<script src="{% static 'assets/js/app.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Gérer le bouton "Suivant"
+    document.querySelectorAll('.nexttab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const nextTabId = btn.getAttribute('data-nexttab');
+            const nextTab = document.querySelector(`#${nextTabId}`);
+            if (nextTab) {
+                const nextTabButton = new bootstrap.Tab(nextTab);
+                nextTabButton.show();
+            }
+        });
+    });
+
+    // Gérer le bouton "Précédent"
+    document.querySelectorAll('.previestab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const previousTabId = btn.getAttribute('data-previous');
+            const previousTab = document.querySelector(`#${previousTabId}`);
+            if (previousTab) {
+                const previousTabButton = new bootstrap.Tab(previousTab);
+                previousTabButton.show();
+            }
+        });
+    });
+});
+</script>
+
+</body>
+
+
+<!-- Mirrored from themesbrand.com/velzon/html/master/forms-wizard.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Nov 2025 14:43:50 GMT -->
+
+</html>
+{% endblock footer.simple %}

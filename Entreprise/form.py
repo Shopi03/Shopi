@@ -1,95 +1,84 @@
+
+
 from django import forms
-from .models import Entreprise, Produit, Commande
-from django.contrib.auth.hashers import make_password
+from .models import Entreprise
+import re
+from django.core.exceptions import ValidationError
 
 class EntrepriseForm(forms.ModelForm):
-    # Champs supplémentaires pour le mot de passe et confirmation
     mot_de_passe = forms.CharField(
-        label="Mot de passe",
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+        widget=forms.PasswordInput(attrs={"placeholder": "Mot de passe sécurisé", "class": "form-control"}),
+        label="Mot de passe"
     )
-    confirmation = forms.CharField(
-        label="Confirmer le mot de passe",
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    mot_de_passe_confirmation = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Confirmez le mot de passe", "class": "form-control"}),
+        label="Confirmation du mot de passe"
     )
 
     class Meta:
         model = Entreprise
-        fields = ["nom", "email", "telephone", "logo", "description", "mot_de_passe", "actif"]
+        fields = ['nom', 'email', 'telephone', 'logo', 'description', 'mot_de_passe']
         widgets = {
-            "nom": forms.TextInput(attrs={"class": "form-control"}),
-            "email": forms.EmailInput(attrs={"class": "form-control"}),
-            "telephone": forms.TextInput(attrs={"class": "form-control"}),
-            "logo": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
-            "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
-            "mot_de_passe": forms.PasswordInput(attrs={"class": "form-control"}),
-            "actif": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-        }
-        labels = {
-            "nom": "Nom de l'entreprise",
-            "email": "Adresse e-mail",
-            "telephone": "Numéro de téléphone",
-            "logo": "Logo de l'entreprise",
-            "description": "Description de l'entreprise",
-            "mot_de_passe": "Mot de passe",
-            "actif": "Actif",
-        }
-        error_messages = {
-            "nom": {"max_length": "Le nom de l'entreprise ne peut pas dépasser 200 caractères.", "required": "Le nom de l'entreprise est obligatoire."},
-            "email": {"invalid": "Entrez une adresse e-mail valide.", "required": "L'adresse e-mail est obligatoire."},
-            "telephone": {"max_length": "Le numéro de téléphone ne peut pas dépasser 15 caractères.", "required": "Le numéro de téléphone est obligatoire."},
-            "description": {"required": "La description de l'entreprise est obligatoire."},
-            "mot_de_passe": {"required": "Le mot de passe est obligatoire."},
-            "confirmation": {"required": "La confirmation du mot de passe est obligatoire."},
+            'nom': forms.TextInput(attrs={'placeholder': "Nom de l'entreprise", 'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'placeholder': "Adresse email", 'class': 'form-control'}),
+            'telephone': forms.TextInput(attrs={'placeholder': "Numéro de téléphone", 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'placeholder': "Brève description de l'entreprise", 'rows': 4, 'class': 'form-control'}),
         }
 
-    # Vérification doublon email
+    def clean(self):
+        cleaned_data = super().clean()
+        mot_de_passe = cleaned_data.get("mot_de_passe")
+        confirmation = cleaned_data.get("mot_de_passe_confirmation")
+        if mot_de_passe and confirmation and mot_de_passe != confirmation:
+            self.add_error("mot_de_passe_confirmation", "Les mots de passe ne correspondent pas.")
+        return cleaned_data
+
+    # Nettoyage individuel des champs (nom, email, téléphone, mot de passe, description)
+    def clean_nom(self):
+        nom = self.cleaned_data.get('nom', '').strip()
+        if len(nom) < 4:
+            raise ValidationError("Le nom de l’entreprise doit comporter au moins 4 caractères.")
+        if not re.match(r'^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s\-_]+$', nom):
+            raise ValidationError("Le nom contient des caractères non autorisés.")
+        if Entreprise.objects.filter(nom__iexact=nom).exists():
+            raise ValidationError("Ce nom d’entreprise existe déjà.")
+        return nom
+
     def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if Entreprise.objects.filter(email=email).exists():
-            raise forms.ValidationError("Une entreprise avec cet email existe déjà.")
+        email = self.cleaned_data.get('email', '').strip()
+        if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            raise ValidationError("L’adresse email n’est pas valide.")
+        if Entreprise.objects.filter(email__iexact=email).exists():
+            raise ValidationError("Cette adresse email est déjà utilisée.")
         return email
 
-    # Vérification correspondance mot de passe
-    def clean(self):
-        cleaned_data = super().clean()
-        mot_de_passe = cleaned_data.get('mot_de_passe')
-        confirmation = cleaned_data.get('confirmation')
-
-        if mot_de_passe and confirmation:
-            if mot_de_passe != confirmation:
-                raise forms.ValidationError("Les mots de passe ne correspondent pas.")
-
-        return cleaned_data
-    
-    # la validation du numero de telephone
     def clean_telephone(self):
-        telephone = self.cleaned_data.get('telephone')
-        if not telephone.isdigit():
-            raise forms.ValidationError("Le numéro de téléphone ne doit contenir que des chiffres.")
-        if len(telephone) < 8:
-            raise forms.ValidationError("Le numéro de téléphone doit contenir au moins 8 chiffres.")
+        telephone = self.cleaned_data.get('telephone', '').strip()
+        if not re.match(r'^(?:\+?\d{1,3})?[0-9]{8,15}$', telephone):
+            raise ValidationError("Le numéro de téléphone doit contenir entre 8 et 15 chiffres.")
+        if Entreprise.objects.filter(telephone=telephone).exists():
+            raise ValidationError("Ce numéro de téléphone est déjà enregistré.")
         return telephone
-    
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        mot_de_passe = cleaned_data.get('mot_de_passe')
-        confirmation = cleaned_data.get('confirmation')
-        if mot_de_passe and confirmation and mot_de_passe != confirmation:
-            self.add_error('confirmation', "Les mots de passe ne correspondent pas.")
-        elif mot_de_passe and len(mot_de_passe) < 6:
-            self.add_error('mot_de_passe', "Le mot de passe doit contenir au moins 6 caractères.")
-        return cleaned_data
 
+    def clean_mot_de_passe(self):
+        mot_de_passe = self.cleaned_data.get('mot_de_passe', '')
+        if len(mot_de_passe) < 8:
+            raise ValidationError("Le mot de passe doit comporter au moins 8 caractères.")
+        if not re.search(r'[A-Z]', mot_de_passe):
+            raise ValidationError("Le mot de passe doit contenir au moins une lettre majuscule.")
+        if not re.search(r'[a-z]', mot_de_passe):
+            raise ValidationError("Le mot de passe doit contenir au moins une lettre minuscule.")
+        if not re.search(r'[0-9]', mot_de_passe):
+            raise ValidationError("Le mot de passe doit contenir au moins un chiffre.")
+        if not re.search(r'[@$!%*#?&]', mot_de_passe):
+            raise ValidationError("Le mot de passe doit contenir au moins un symbole spécial (@, $, !, %, *, #, ?, &).")
+        return mot_de_passe
 
-    # Sauvegarde avec hachage du mot de passe
-    def save(self, commit=True):
-        entreprise = super().save(commit=False)
-        entreprise.mot_de_passe = make_password(self.cleaned_data["mot_de_passe"])
-        if commit:
-            entreprise.save()
-        return entreprise
+    def clean_description(self):
+        desc = self.cleaned_data.get('description', '').strip()
+        if len(desc) < 10:
+            raise ValidationError("La description doit comporter au moins 10 caractères.")
+        return re.sub(r'<[^>]*>', '', desc)  # Supprime tout code HTML (XSS)
 
 
 
