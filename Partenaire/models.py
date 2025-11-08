@@ -6,7 +6,7 @@ Chaque partenaire possède ses informations personnelles et un compte d'accès.
 """
 
 # -----------------------------------------------------------
-# 🔹 Identité du partenaire
+#  Identité du partenaire
 # -----------------------------------------------------------
 
 # L'identifiant unique est créé automatiquement par Django (champ "id" implicite)
@@ -38,7 +38,7 @@ class Partenaire(models.Model):
     )
 
     # -----------------------------------------------------------
-    # 🧍 Informations supplémentaires
+    #  Informations supplémentaires
     # -----------------------------------------------------------
 
     profil = models.ImageField(
@@ -66,7 +66,7 @@ class Partenaire(models.Model):
     )
 
     # -----------------------------------------------------------
-    # 🔑 Authentification et gestion
+    #  Authentification et gestion
     # -----------------------------------------------------------
 
     mot_de_passe = models.CharField(
@@ -81,7 +81,7 @@ class Partenaire(models.Model):
     )
 
     # -----------------------------------------------------------
-    # 🔎 Méthodes utiles
+    #  Méthodes utiles
     # -----------------------------------------------------------
 
     def __str__(self):

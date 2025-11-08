@@ -1,9 +1,8 @@
 <!-- fichier : shopi_app/templates/shopi_app/supprimer_partenaire.html -->
 
-{% extends "base.html" %}
-{% load static %}
+{% extends 'auth/base.simple.html' %}
 
-{% block content %}
+{% block contenu %}
 <h2>Supprimer le partenaire : {{ partenaire.prenom }} {{ partenaire.nom }}</h2>
 
 <p>Êtes-vous sûr de vouloir supprimer ce partenaire ? Cette action est irréversible.</p>

@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     # Afficher tous les partenaires
-    path('', views.liste_partenaires, name='liste_partenaires'),
+    path('', views.dashboard_partenaire, name='dashboard_partenaire'),
 
     # Créer un nouveau partenaire
     path('creer_partenaire/', views.creer_partenaire, name='creer_partenaire'),
@@ -21,4 +21,9 @@ urlpatterns = [
 
     # Permettre au partenaire de se déconnecter
     path('deconnexion/', views.logout_partenaire, name='logout_partenaire'),
+
+    # Processus d'inscription en plusieurs étapes
+    # path('inscription/1/', views.inscription1, name='inscription1'),
+    path('ajax/verifier-email/', views.verifier_email, name='verifier_email'),
+    path('ajax/verifier-pseudo/', views.verifier_pseudo, name='verifier_pseudo'),
 ]

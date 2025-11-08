@@ -34,7 +34,11 @@
     </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
         <!-- ========== App Menu ========== -->
-       {% include 'composant/menu.html' %} 
+        
+
+       {% block menu %}
+         {% include 'composant/menu.html' %}
+       {% endblock menu %}
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
         <div class="vertical-overlay"></div>

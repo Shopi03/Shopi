@@ -1,0 +1,286 @@
+{% extends "auth/base.simple.html" %}
+{% block contenu %}
+
+<div class="auth-page-wrapper pt-5">
+    <!-- Fond de la page -->
+    <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
+        <div class="bg-overlay"></div>
+        <div class="shape">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 1440 120">
+                <path
+                    d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z">
+                </path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="auth-page-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card mt-4 card-bg-fill">
+                        <div class="card-body p-4">
+                            <div class="text-center mt-2">
+                                <h5 class="text-primary">Créer un nouveau compte</h5>
+                                <p class="text-muted">Obtenez dès maintenant votre compte Shopi gratuit</p>
+                            </div>
+
+                            <!-- Formulaire -->
+                            <form id="form-inscription" method="POST" enctype="multipart/form-data"
+                                action="{% url 'creer_partenaire' %}">
+                                {% csrf_token %}
+
+                                <!-- Étape 1 -->
+                                <div class="mb-3 step active">
+
+                                    <label for="nom" class="form-label">Nom <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nom" name="nom"
+                                        value="{{ valeurs.nom }}" placeholder="Entrer votre nom" required>
+                                    <small class="text-danger d-block" id="nomError"></small>
+
+                                    <label for="prenom" class="form-label mt-3">Prénom <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="prenom" name="prenom"
+                                        value="{{ valeurs.prenom }}" placeholder="Entrer votre prénom" required>
+                                    <small class="text-danger d-block" id="prenomError"></small>
+
+                                    <div class="mt-3 text-end">
+                                        <button class="btn btn-success" type="button"
+                                            onclick="nextStep(1)">Suivant</button>
+                                    </div>
+                                </div>
+
+                                <!-- Étape 2 -->
+                                <div class="mb-3 step">
+
+                                    <label for="date_naissance" class="form-label">Date de naissance <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="date_naissance"
+                                        name="date_naissance" value="{{ valeurs.date_naissance }}" required>
+                                    <small class="text-danger d-block" id="date_naissanceError"></small>
+
+                                    <label for="genre" class="form-label mt-3">Genre <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="genre" name="genre" required>
+                                        <option value="">Choisir le genre</option>
+                                        <option value="M" {% if valeurs.genre == "M" %}selected{% endif %}>Masculin</option>
+                                        <option value="F" {% if valeurs.genre == "F" %}selected{% endif %}>Féminin</option>
+                                    </select>
+                                    <small class="text-danger d-block" id="genreError"></small>
+
+                                    <div class="mt-3 d-flex justify-content-between">
+                                        <button class="btn btn-secondary" type="button"
+                                            onclick="prevStep(0)">Retour</button>
+                                        <button class="btn btn-success" type="button"
+                                            onclick="nextStep(2)">Suivant</button>
+                                    </div>
+                                </div>
+
+                                <!-- Étape 3 -->
+                                <div class="step">
+
+                                    <label for="email" class="form-label">E-mail <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="email" name="mail"
+                                        value="{{ valeurs.mail }}" placeholder="Entrer votre e-mail" required>
+                                    <small id="emailError" class="d-block"></small>
+
+                                    <label for="pseudo" class="form-label mt-3">Nom d'utilisateur <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="pseudo" name="pseudo"
+                                        value="{{ valeurs.pseudo }}" placeholder="Entrer votre pseudo" required>
+                                    <small id="pseudoError" class="d-block"></small>
+
+                                    <div class="mt-3 d-flex justify-content-between">
+                                        <button class="btn btn-secondary" type="button"
+                                            onclick="prevStep(1)">Retour</button>
+                                        <button class="btn btn-success" type="button"
+                                            onclick="nextStep(3)">Suivant</button>
+                                    </div>
+                                </div>
+
+                                <!-- Étape 4 -->
+                                <div class="step">
+
+                                    <label for="password-input" class="form-label">Mot de passe <span
+                                            class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="password-input"
+                                        name="mot_de_passe" placeholder="Entrer votre mot de passe" required>
+                                    <small id="password-inputError" class="text-danger d-block"></small>
+
+
+
+                                    <label for="profil" class="form-label mt-3">Photo de profil</label>
+                                    <input type="file" class="form-control" id="profil" name="profil">
+                                    <small id="profilError" class="text-danger d-block"></small>
+
+
+                                    <div class="col-lg-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4 class="card-title mb-0">Profile Picture Selection</h4>
+                                            </div><!-- end card header -->
+
+                                            <div class="card-body">
+                                                <p class="text-muted">FilePond is a JavaScript library with profile picture-shaped file upload variation.</p>
+                                                <div class="avatar-xl mx-auto">
+                                                    <input type="file" class="filepond filepond-input-circle" name="filepond" accept="image/png, image/jpeg, image/gif" />
+                                                </div>
+
+                                            </div><!-- end card body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col -->
+
+
+
+
+                                    <div class="mt-3 d-flex justify-content-between">
+                                        <button class="btn btn-secondary" type="button"
+                                            onclick="prevStep(2)">Retour</button>
+                                        <button class="btn btn-success" type="submit">Créer un compte</button>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <p class="mb-0">Vous avez déjà un compte ? <a href="{% url 'login_partenaire' %}"
+                                        class="fw-semibold text-primary text-decoration-underline"> Se connecter </a>
+                                    </p>
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+
+                            <p>&copy; {% now "Y" %} SHOPI <i class="mdi mdi-heart text-danger"></i> - Tous droits réservés</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->
+
+<!-- STYLES -->
+<style>
+    .step {
+        display: none;
+    }
+    .step.active {
+        display: block;
+    }
+    small {
+        font-size: 0.85em;
+    }
+</style>
+
+<!-- SCRIPTS -->
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll(".step");
+
+    function showStep(n) {
+        steps.forEach((step, i) => step.classList.toggle("active", i === n));
+        currentStep = n;
+    }
+
+    function nextStep(n) {
+        if (validateStep(currentStep)) showStep(n);
+    }
+
+    function prevStep(n) {
+        showStep(n);
+    }
+
+    // Validation champ par champ
+    function validateStep(n) {
+        const step = steps[n];
+        const inputs = step.querySelectorAll("input, select");
+        let isValid = true;
+
+        step.querySelectorAll("small.text-danger").forEach(msg => msg.textContent = "");
+
+        inputs.forEach(input => {
+            const errorField = document.getElementById(input.id + "Error");
+            if (input.hasAttribute("required") && !input.value.trim()) {
+                if (errorField) errorField.textContent = "Ce champ est obligatoire.";
+                isValid = false;
+            }
+
+            if (input.type === "email" && input.value) {
+                const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!regex.test(input.value)) {
+                    if (errorField) errorField.textContent = "Adresse e-mail invalide.";
+                    isValid = false;
+                }
+            }
+
+            if (input.type === "password" && input.value.length < 6) {
+                if (errorField) errorField.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    // Vérification AJAX e-mail
+    document.getElementById("email").addEventListener("input", async function() {
+        const email = this.value;
+        const message = document.getElementById("emailError");
+        if (!email) return message.textContent = "";
+
+        const response = await fetch(`/ajax/verifier-email/?email=${email}`);
+        const data = await response.json();
+
+        message.textContent = data.message;
+        message.className = data.disponible ? "text-success" : "text-danger";
+    });
+
+    // Vérification AJAX pseudo
+    document.getElementById("pseudo").addEventListener("input", async function() {
+        const pseudo = this.value;
+        const message = document.getElementById("pseudoError");
+        if (!pseudo) return message.textContent = "";
+
+        const response = await fetch(`/ajax/verifier-pseudo/?pseudo=${pseudo}`);
+        const data = await response.json();
+
+        message.textContent = data.message;
+        message.className = data.disponible ? "text-success" : "text-danger";
+    });
+
+    // Affichage des messages Django dans les bons champs
+    document.addEventListener("DOMContentLoaded", () => {
+        {% if messages %}
+            {% for message in messages %}
+                let msg = "{{ message|escapejs }}";
+                if (msg.includes("e-mail")) document.getElementById("emailError").textContent = msg;
+                else if (msg.includes("pseudo")) document.getElementById("pseudoError").textContent = msg;
+                else if (msg.includes("naissance")) document.getElementById("date_naissanceError").textContent = msg;
+                else if (msg.includes("20 ans")) document.getElementById("date_naissanceError").textContent = msg;
+                else {
+                    const alert = document.createElement("div");
+                    alert.className = "alert alert-info mt-3";
+                    alert.textContent = msg;
+                    document.querySelector(".card-body").prepend(alert);
+                }
+            {% endfor %}
+        {% endif %}
+    });
+</script>
+
+{% endblock contenu %}

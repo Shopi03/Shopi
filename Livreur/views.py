@@ -299,5 +299,3 @@ def logout_livreur(request):
         del request.session['livreur_nom']
     messages.info(request, "Vous êtes maintenant déconnecté.")
     return redirect('login_livreur')
-
-

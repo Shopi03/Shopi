@@ -1,9 +1,9 @@
 <!-- fichier : shopi_app/templates/shopi_app/liste_partenaires.html -->
 
-{% extends "base.html" %}
+{% extends "auth/base.simple.html" %}
 {% load static %}
 
-{% block content %}
+{% block contenu %}
 <h2>Liste des partenaires</h2>
 
 <a href="{% url 'creer_partenaire' %}">Créer un nouveau partenaire</a>
