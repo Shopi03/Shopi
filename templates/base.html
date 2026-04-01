@@ -1,43 +1,35 @@
 {% load static %}
-{% include 'composant/lien_entete.html' %}
+
+{% block entete %}
+    {% include 'composant/menu/lien_entete.html' %}
+    
+{% endblock entete %}
+    
     
 
     <!-- Begin page -->
 <div id="layout-wrapper">
 
     
-   {% include 'composant/header.html' %}
+   {% block header %}
+
+    {% include 'composant/menu/header.html' %}
+
+   {% endblock header %}
         
 
     <!-- removeNotificationModal -->
-    <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="NotificationModalbtn-close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mt-2 text-center">
-                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
-                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                        <h4>Are you sure ?</h4>
-                        <p class="text-muted mx-4 mb-0">Are you sure you want to remove this Notification ?</p>
-                    </div>
-                </div>
-                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                    <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete It!</button>
-                </div>
-            </div>
+   {% block notification %}
 
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+   {% include "composant/menu/notification.html" %}
+
+   {% endblock notification %}
         <!-- ========== App Menu ========== -->
         
 
        {% block menu %}
-         {% include 'composant/menu.html' %}
+            
+            {% include 'composant/menu/menu.html' %}
        {% endblock menu %}
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
@@ -58,8 +50,13 @@
 
 
 
-  
-  {% block footer %}
-      {% include 'composant/footer.html' %}
-  {% endblock footer %}
+{% block footer_contenu %}
+    {% include 'composant/footer/footer_contenu.html' %}
+{% endblock footer_contenu %}
+    
+
+    
+{% block footer_js %}
+    {% include 'composant/footer/footer_lien_js.html' %}
+{% endblock footer_js %}
     

@@ -1,0 +1,225 @@
+{% extends 'auth/base.simple.html' %}
+{% load static %}
+{% block contenu %}
+
+<div class="main-content">
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-xl-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">ÉTAPE DE CRÉATION DE SUPER ADMIN</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data" class="form-steps" autocomplete="off">
+                                {% csrf_token %}
+                                <div class="text-center pt-3 pb-4 mb-1">
+                                    <h5>Création de compte Super Admin</h5>
+                                </div>
+
+                                <div id="custom-progress-bar" class="progress-nav mb-4">
+                                    <div class="progress" style="height: 1px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <ul class="nav nav-pills progress-bar-tab custom-nav" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill active" id="pills-gen-info-tab" data-bs-toggle="pill" data-bs-target="#pills-gen-info" type="button" role="tab" aria-controls="pills-gen-info" aria-selected="true">1</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill" id="pills-info-desc-tab" data-bs-toggle="pill" data-bs-target="#pills-info-desc" type="button" role="tab" aria-controls="pills-info-desc" aria-selected="false">2</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill" id="pills-success-tab" data-bs-toggle="pill" data-bs-target="#pills-success" type="button" role="tab" aria-controls="pills-success" aria-selected="false">3</button>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="tab-content">
+                                    <!-- ====================== ÉTAPE 1 ====================== -->
+                                    <div class="tab-pane fade show active" id="pills-gen-info" role="tabpanel" aria-labelledby="pills-gen-info-tab">
+                                        <div>
+                                            <div class="mb-4">
+                                                <h5 class="mb-1">INFORMATION GÉNÉRALE</h5>
+                                                <p class="text-muted">Remplissez toutes les informations ci-dessous</p>
+                                            </div>
+
+                                            <div class="row">
+                                                <!-- Nom -->
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="gen-info-nom-input">Nom complet</label>
+                                                        <input type="text" class="form-control {% if errors.nom %}is-invalid{% endif %}" id="gen-info-nom-input" name="nom" value="{{ data.nom }}" placeholder="Entrer le nom complet" required>
+                                                        {% if errors.nom %}
+                                                            <div class="invalid-feedback">{{ errors.nom }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Email -->
+                                                <div class="col-lg-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="gen-info-email-input">Email</label>
+                                                        <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="gen-info-email-input" name="email" value="{{ data.email }}" placeholder="Entrer l'email" required>
+                                                        {% if errors.email %}
+                                                            <div class="invalid-feedback">{{ errors.email }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Téléphone -->
+                                            <div class="mb-3">
+                                                <label class="form-label" for="gen-info-telephone-input">Téléphone</label>
+                                                <input type="text" class="form-control {% if errors.telephone %}is-invalid{% endif %}" id="gen-info-telephone-input" name="telephone" value="{{ data.telephone }}" placeholder="Entrer le numéro de téléphone" required>
+                                                {% if errors.telephone %}
+                                                    <div class="invalid-feedback">{{ errors.telephone }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-start gap-3 mt-4">
+                                            <button type="button" class="btn btn-success ms-auto nexttab" data-nexttab="pills-info-desc-tab">Suivant</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- ====================== ÉTAPE 2 ====================== -->
+                                    <div class="tab-pane fade" id="pills-info-desc" role="tabpanel" aria-labelledby="pills-info-desc-tab">
+                                        <div class="text-center">
+                                            <div class="profile-user position-relative d-inline-block mx-auto mb-2">
+                                                <img src="{% static 'assets/images/users/user-dummy-img.jpg' %}" class="rounded-circle avatar-lg img-thumbnail user-profile-image" alt="user-profile-image">
+                                                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                                    <input id="profile-img-file-input" type="file" class="profile-img-file-input" accept="image/png, image/jpeg" name="profil">
+                                                    <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                                                        <span class="avatar-title rounded-circle bg-light text-body">
+                                                            <i class="ri-camera-fill"></i>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% if errors.profil %}
+                                                <div class="text-danger small">{{ errors.profil }}</div>
+                                            {% endif %}
+                                            <h5 class="fs-14">Ajouter un profil</h5>
+                                        </div>
+
+                                        <!-- Mot de passe -->
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-password-input">Mot de passe</label>
+                                            <input type="password" class="form-control {% if errors.mot_de_passe %}is-invalid{% endif %}" id="gen-info-password-input" name="mot_de_passe" placeholder="Entrer le mot de passe" required>
+                                            {% if errors.mot_de_passe %}
+                                                <div class="invalid-feedback">{{ errors.mot_de_passe }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Confirmation -->
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-password-confirm-input">Confirmation du mot de passe</label>
+                                            <input type="password" class="form-control {% if errors.mot_de_passe_confirmation %}is-invalid{% endif %}" id="gen-info-password-confirm-input" name="mot_de_passe_confirmation" placeholder="Confirmer le mot de passe" required>
+                                            {% if errors.mot_de_passe_confirmation %}
+                                                <div class="invalid-feedback">{{ errors.mot_de_passe_confirmation }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="d-flex align-items-start gap-3 mt-4">
+                                            <button type="button" class="btn btn-link previestab" data-previous="pills-gen-info-tab">Retour</button>
+                                            <button type="submit" class="btn btn-success ms-auto">Soumettre</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- ====================== ÉTAPE 3 ====================== -->
+                                    <div class="tab-pane fade" id="pills-success" role="tabpanel" aria-labelledby="pills-success-tab">
+                                        <div class="text-center">
+                                            <div class="mb-4">
+                                                <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px"></lord-icon>
+                                            </div>
+                                            <h5>Bien fait !</h5>
+                                            <p class="text-muted">Votre compte a été créé avec succès.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock contenu %}
+
+{% block footer.simple %}
+<script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // =====================================
+    // Affichage des messages Django (alert)
+    // =====================================
+    {% if messages %}
+        {% for message in messages %}
+            alert("{{ message }}");
+        {% endfor %}
+    {% endif %}
+
+    // =====================================
+    // Afficher automatiquement l'onglet avec erreur serveur
+    // =====================================
+    {% if errors.mot_de_passe or errors.mot_de_passe_confirmation or errors.profil %}
+        new bootstrap.Tab(document.querySelector('#pills-info-desc-tab')).show();
+    {% elif errors.nom or errors.email or errors.telephone %}
+        new bootstrap.Tab(document.querySelector('#pills-gen-info-tab')).show();
+    {% endif %}
+
+    // Validation étape
+    function validateStep(tabPane) {
+        const inputs = tabPane.querySelectorAll('input[required], textarea[required]');
+        let valid = true;
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.classList.add('is-invalid');
+                valid = false;
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+        return valid;
+    }
+
+    // Suivant
+    document.querySelectorAll('.nexttab').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const currentPane = btn.closest('.tab-pane');
+            if (!validateStep(currentPane)) return;
+            const nextTabId = btn.getAttribute('data-nexttab');
+            const nextTabBtn = document.getElementById(nextTabId);
+            if(nextTabBtn){ new bootstrap.Tab(nextTabBtn).show(); }
+        });
+    });
+
+    // Précédent
+    document.querySelectorAll('.previestab').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const prevTabId = btn.getAttribute('data-previous');
+            const prevTabBtn = document.getElementById(prevTabId);
+            if(prevTabBtn){ new bootstrap.Tab(prevTabBtn).show(); }
+        });
+    });
+
+    // Retirer erreur à la saisie
+    document.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('input', () => input.classList.remove('is-invalid'));
+    });
+
+});
+</script>
+{% endblock footer.simple %}

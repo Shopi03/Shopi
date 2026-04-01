@@ -1,0 +1,102 @@
+{% extends 'auth/base.simple.html' %}
+{% load static %}
+
+{% block contenu %}
+
+<div class="auth-page-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card mt-5 shadow-sm card-bg-fill">
+                    <div class="card-body p-4">
+
+                        <!-- Logo -->
+                        <div class="text-center mb-4">
+                            <a href="index.html" class="d-inline-block auth-logo">
+                                <img src="{% static 'assets/images/logo-light.png' %}" alt="Shopi Logo" height="40">
+                            </a>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <h5 class="text-primary fw-bold">Bienvenue sur Shopi</h5>
+                            <p class="text-muted">Connectez-vous pour accéder à votre tableau de bord</p>
+                        </div>
+
+                        <!-- Message global -->
+                        {% if errors %}
+                            <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+                                <i class="ri-error-warning-line me-2"></i>
+                                Identifiant ou mot de passe incorrect
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+
+                        <!-- Formulaire -->
+                        <form method="POST" novalidate>
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label for="login" class="form-label">Identifiant (Email, Téléphone ou Nom)</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="login" 
+                                       name="login" 
+                                       placeholder="Entrez votre identifiant"
+                                       value="{{ login|default:'' }}" 
+                                       required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="password-input">Mot de passe</label>
+                                <div class="position-relative auth-pass-inputgroup">
+                                    <input name="mot_de_passe" 
+                                           type="password" 
+                                           class="form-control pe-5 password-input" 
+                                           placeholder="Entrez votre mot de passe" 
+                                           id="password-input" 
+                                           required>
+                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" 
+                                            type="button" id="password-addon">
+                                        <i class="ri-eye-fill align-middle"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-2 text-center">
+                                <a href="{% url 'mot_de_passe_oubliez' %}" class="fw-semibold text-primary text-decoration-underline">
+                                    Mot de passe oublié ?
+                                </a>
+                            </div>
+
+                            <div class="mt-4">
+                                <button class="btn btn-success w-100 fw-bold" type="submit">Se connecter</button>
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <p class="mb-0">
+                                    Pas encore de compte ? 
+                                    <a href="{% url 'create_super_admin' %}" class="fw-semibold text-primary text-decoration-underline">
+                                        Inscrivez-vous
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const passwordInput = document.getElementById("password-input");
+    const passwordToggle = document.getElementById("password-addon");
+
+    passwordToggle.addEventListener("click", function() {
+        passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    });
+});
+</script>
+
+{% endblock %}

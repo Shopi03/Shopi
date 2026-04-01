@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    
+        {% include 'partenaire/composant/partenaire/menu_partenaire.html' %}
+    
+{% endblock menu %}
+
+{% block contenu %}
+
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- TITRE -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                        <h4 class="mb-sm-0">Liste des Livreurs</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Tables</a></li>
+                                <li class="breadcrumb-item active">Livreurs</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLEAU -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Ajouter</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="listjs-table" id="livreurList">
+
+                                <!-- BOUTONS -->
+                                <div class="row g-4 mb-3">
+                                    <div class="col-sm-auto">
+                                        <button type="button"
+                                                class="btn btn-success add-btn"
+                                                data-bs-toggle="modal"
+                                                id="create-btn"
+                                                data-bs-target="#showModal">
+                                            <i class="ri-add-line align-bottom me-1"></i> Ajouter
+                                        </button>
+                                    </div>
+                                    <div class="col-sm">
+                                        <div class="d-flex justify-content-sm-end">
+                                            <div class="search-box ms-2">
+                                                <input type="text"
+                                                       class="form-control search"
+                                                       placeholder="Rechercher..."
+                                                       id="search-input">
+                                                <i class="ri-search-line search-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TABLE -->
+                                <div class="table-responsive table-card mt-3 mb-1">
+                                    <table class="table align-middle table-nowrap">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width:50px">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    </div>
+                                                </th>
+                                                <th class="sort" data-sort="livreur_name">Nom & Prénom</th>
+                                                <th class="sort" data-sort="email">Email</th>
+                                                <th class="sort" data-sort="telephone">Téléphone</th>
+                                                <th class="sort" data-sort="role">Rôle</th>
+                                                <th class="sort" data-sort="createur">Créé par</th>
+                                                <th class="sort" data-sort="status">Statut</th>
+                                                <th class="sort" data-sort="date">Date d'inscription</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            {% for livreur in livreurs %}
+                                            <tr>
+                                                <th>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="{{ livreur.id }}">
+                                                    </div>
+                                                </th>
+                                                <td class="livreur_name">{{ livreur.user.prenom }} {{ livreur.user.nom }}</td>
+                                                <td class="email">{{ livreur.user.email }}</td>
+                                                <td class="telephone">{{ livreur.user.telephone }}</td>
+                                                <td class="role">{{ livreur.user.role|capfirst }}</td>
+                                                <td class="createur">
+                                                    {% if livreur.user.code_creation.createur %}
+                                                        {{ livreur.user.code_creation.createur.prenom }} {{ livreur.user.code_creation.createur.nom }}
+                                                    {% else %}
+                                                        Super Admin
+                                                    {% endif %}
+                                                </td>
+                                                <td class="status">
+                                                    {% if livreur.user.statut == 'actif' %}
+                                                        <span class="badge bg-success-subtle text-success text-uppercase">Actif</span>
+                                                    {% elif livreur.user.statut == 'suspendu' %}
+                                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Suspendu</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning-subtle text-warning text-uppercase">En attente</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="date">{{ livreur.user.date_joined|date:"d M Y" }}</td>
+                                                <td>
+                                                   
+                                                        <button class="btn btn-sm {% if livreur.user.statut == 'actif' %}btn-danger{% else %}btn-success{% endif %} remove-item-btn"
+                                                                data-id="{{ livreur.id }}">
+                                                            {% if livreur.user.statut == 'actif' %}Suspendre{% else %}Activer{% endif %}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="9" class="text-center">Aucun livreur trouvé.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="d-flex justify-content-end mt-3">
+                                    <ul class="pagination listjs-pagination mb-0"></ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL -->
+            <div class="modal fade" id="showModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light p-3">
+                            <h5 class="modal-title">Ajouter Livreur</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <form method="POST" class="tablelist-form" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="modal-body">
+
+                                <input type="hidden" id="id-field" name="id">
+
+                                <!-- Affichage des erreurs -->
+                                {% if erreurs %}
+                                    <div class="alert alert-danger">
+                                        <ul class="mb-0">
+                                            {% for field, message in erreurs.items %}
+                                                <li>{{ message }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="email-field" name="email"
+                                           class="form-control"
+                                           value="{{ valeurs.email|default:'' }}" required>
+                                </div>
+
+                                <!-- Téléphone -->
+                                <div class="mb-3">
+                                    <label class="form-label">Téléphone</label>
+                                    <input type="text" id="telephone-field" name="telephone"
+                                           class="form-control"
+                                           value="{{ valeurs.telephone|default:'' }}" required>
+                                </div>
+
+                                <!-- Code de création -->
+                                <div class="mb-3">
+                                    <label class="form-label">Code de création</label>
+                                    <select class="form-control" id="code-field" name="code_creation" required>
+                                        <option value="">------</option>
+                                        {% for code in codes_disponibles %}
+                                            <option value="{{ code.code }}"
+                                                {% if valeurs.code_creation == code.code %}selected{% endif %}>
+                                                {{ code.code }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Statut -->
+                                <div class="mb-3">
+                                    <label class="form-label">Statut</label>
+                                    <select class="form-control" id="status-field" name="statut" required>
+                                        <option value="">------</option>
+                                        <option value="actif" {% if valeurs.statut == 'actif' %}selected{% endif %}>Actif</option>
+                                        <option value="suspendu" {% if valeurs.statut == 'suspendu' %}selected{% endif %}>Suspendu</option>
+                                        <option value="en_attente" {% if valeurs.statut == 'en_attente' %}selected{% endif %}>En attente</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-success">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- LIST JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const modal = document.getElementById('showModal');
+    const role = "{{ role }}";
+
+    // Ouvrir le modal automatiquement s'il y a des erreurs
+    {% if erreurs %}
+        var myModal = new bootstrap.Modal(modal);
+        myModal.show();
+    {% endif %}
+
+    document.querySelectorAll('.edit-item-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            modal.querySelector('#id-field').value = this.dataset.id;
+            modal.querySelector('#email-field').value = this.dataset.email;
+            modal.querySelector('#telephone-field').value = this.dataset.telephone;
+            modal.querySelector('#code-field').value = this.dataset.code;
+            modal.querySelector('#status-field').value = this.dataset.statut;
+
+            // Champs verrouillés pour tous
+            modal.querySelector('#email-field').readOnly = true;
+            modal.querySelector('#telephone-field').readOnly = true;
+            modal.querySelector('#code-field').disabled = true;
+
+            // Seul super admin peut modifier le statut
+            modal.querySelector('#status-field').disabled = role !== 'super_admin';
+        });
+    });
+
+    // Création
+    document.getElementById('create-btn').addEventListener('click', function() {
+        modal.querySelector('#id-field').value = '';
+        modal.querySelector('#email-field').value = '';
+        modal.querySelector('#telephone-field').value = '';
+        modal.querySelector('#code-field').value = '';
+        modal.querySelector('#status-field').value = '';
+
+        modal.querySelector('#email-field').readOnly = false;
+        modal.querySelector('#telephone-field').readOnly = false;
+        modal.querySelector('#code-field').disabled = false;
+        modal.querySelector('#status-field').disabled = false;
+    });
+
+    // Toggle Activer / Suspendre
+    document.querySelectorAll('.remove-item-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            fetch(`/administrateur/livreur/toggle/${id}/`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success){
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+        });
+    });
+
+    // List.js
+    const options = {
+        valueNames: ['livreur_name','email','telephone','role','createur','status','date'],
+        page: 5,
+        pagination: true
+    };
+    const userList = new List('livreurList', options);
+
+    document.getElementById('search-input').addEventListener('keyup', function(){
+        userList.search(this.value);
+    });
+
+});
+</script>
+
+{% endblock contenu %}

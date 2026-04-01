@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block header %}
+            {% include 'Livreur/composant/menu/header.html' %}
+{% endblock header %}
+
+{% block menu %}
+            {% include 'Livreur/composant/menu/menu_livreur.html' %}
+{% endblock menu %}
+
+
+
+
+{% block contenu %}
+    {% include 'Livreur/composant/contenu_livreur.html' %}
+{% endblock contenu %}
+
+{% block footer_js %}
+    {% include 'livreur/composant/footer/footer.js.html' %}
+{% endblock footer_js %}
+    
+    
+
+    
+
+
+    

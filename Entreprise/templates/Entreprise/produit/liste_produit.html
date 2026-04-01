@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+
+{% block entete %}
+    
+
+    
+
+<!doctype html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default">
+
+
+<!-- Mirrored from themesbrand.com/velzon/html/master/apps-ecommerce-products.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Nov 2025 14:39:05 GMT -->
+<head>
+
+    <meta charset="utf-8" />
+    <title>Produits | Shopi - Admin & Tableau de Bord</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    <!-- nouisliderribute css -->
+    <link rel="stylesheet" href="{% static 'assets/libs/nouislider/nouislider.min.css' %}">
+
+    <!-- gridjs css -->
+    <link rel="stylesheet" href="{% static 'assets/libs/gridjs/theme/mermaid.min.css' %}">
+
+    <!-- Layout config Js -->
+    <script src="{% static 'assets/js/layout.js' %}"></script>
+    <!-- Bootstrap Css -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- custom Css-->
+    <link href="{% static 'assets/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+{% endblock entete %}
+
+
+
+{% block menu %}
+            {% include 'Entreprise/composant/menu/menu_entreprise.html' %}
+{% endblock menu %}
+
+{% block contenu %}
+    
+
+ <div class="main-content">
+
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                                <h4 class="mb-sm-0">Products</h4>
+
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+                                        <li class="breadcrumb-item active">Products</li>
+                                    </ol>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+
+                    <div class="row">
+                       <div class="col-xl-3 col-lg-4">
+                            <div class="card">
+                               <div class="card-header">
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-16">Filtres / Filtres</h5>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <a href="#" class="text-decoration-underline" id="clearall">Tout Effacer / Fouti Konko</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Champ filtre texte (ex : catégorie ou mots clés) -->
+                                    <div class="filter-choices-input">
+                                        <form method="GET" id="searchForm" action="">
+                                            <input 
+                                                class="form-control" 
+                                                data-choices 
+                                                data-choices-removeItem 
+                                                type="text" 
+                                                id="filter-choices-input" 
+                                                name="q" 
+                                                placeholder="Tapez une catégorie..." 
+                                                value="{{ query|default:'' }}" 
+                                                autocomplete="off"
+                                            />
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Script pour bouton Tout Effacer et recherche instantanée -->
+                                <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    const clearBtn = document.getElementById("clearall");
+                                    const filterInput = document.getElementById("filter-choices-input");
+                                    const searchForm = document.getElementById("searchForm");
+
+                                    // Bouton Tout Effacer
+                                    clearBtn.addEventListener("click", function(e){
+                                        e.preventDefault();
+                                        filterInput.value = "";
+                                        searchForm.submit();
+                                    });
+
+                                    // Recherche instantanée à chaque frappe
+                                    filterInput.addEventListener("keyup", function(){
+                                        searchForm.submit();
+                                    });
+                                });
+                                </script>
+
+                                <div class="accordion accordion-flush filter-accordion">
+
+                                    <div class="card-body border-bottom">
+                                        <div>
+                                            <p class="text-muted text-uppercase fs-12 fw-medium mb-2">Produits / Produi</p>
+                                            <ul class="list-unstyled mb-0 filter-list">
+                                                {% for produit in produits %}
+                                                <li>
+                                                    <a href="?q={{ produit.titre }}" class="d-flex py-1 align-items-center">
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="fs-13 mb-0 listname">{{ produit.titre }}</h5>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                {% empty %}
+                                                <li>
+                                                    <span class="text-muted">Aucun produit disponible</span>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body border-bottom">
+                                        <p class="text-muted text-uppercase fs-12 fw-medium mb-4">Prix / Pri</p>
+
+                                        <div id="product-price-range"></div>
+                                        <div class="formCost d-flex gap-2 align-items-center mt-3">
+                                            <input class="form-control form-control-sm" type="text" id="minCost" value="0" /> 
+                                            <span class="fw-semibold text-muted">à / bo</span> 
+                                            <input class="form-control form-control-sm" type="text" id="maxCost" value="1000" />
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="flush-headingBrands">
+                                            <button class="accordion-button bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseBrands" aria-expanded="true" aria-controls="flush-collapseBrands">
+                                                <span class="text-muted text-uppercase fs-12 fw-medium">Marques / Mak</span> 
+                                                <span class="badge bg-success rounded-pill align-middle ms-1 filter-badge"></span>
+                                            </button>
+                                        </h2>
+
+                                        <div id="flush-collapseBrands" class="accordion-collapse collapse show" aria-labelledby="flush-headingBrands">
+                                            <div class="accordion-body text-body pt-0">
+                                                <div class="search-box search-box-sm">
+                                                    <input type="text" class="form-control bg-light border-0" id="searchBrandsList" placeholder="Rechercher Marques / Chèché Mak...">
+                                                    <i class="ri-search-line search-icon"></i>
+                                                </div>
+                                                <!-- Les checkboxes restent les mêmes -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                        <!-- end col -->
+
+                        <div class="col-xl-9 col-lg-8">
+                            <div>
+                                <div class="card">
+                                    <div class="card-header border-0">
+                                        <div class="row g-4">
+                                            <div class="col-sm-auto">
+                                                <div>
+                                                    <a href="{% url 'ajout_produit' %}" class="btn btn-success" id="addproduct-btn"><i class="ri-add-line align-bottom me-1"></i> Ajout Produit</a>
+                                                </div>
+                                            </div>
+                                           <div class="col-sm">
+                                                <div class="d-flex justify-content-sm-end">
+
+                                                    <!-- Formulaire de recherche -->
+                                                    <form method="GET" action="">
+                                                        <div class="search-box ms-2 position-relative">
+
+                                                            <!-- Champ recherche -->
+                                                            <input type="text"
+                                                                name="q"
+                                                                class="form-control"
+                                                                placeholder="Recherche des produits..."
+                                                                value="{{ query }}">
+
+                                                            <!-- Bouton submit invisible (soumission avec Entrée) -->
+                                                            <button type="submit" style="display:none;"></button>
+
+                                                            <!-- Icône -->
+                                                            <i class="ri-search-line search-icon"></i>
+
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <ul class="nav nav-tabs-custom card-header-tabs border-bottom-0" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#productnav-all" role="tab">
+                                                            All <span class="badge bg-danger-subtle text-danger align-middle rounded-pill ms-1">12</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link fw-semibold" data-bs-toggle="tab" href="#productnav-published" role="tab">
+                                                            Published <span class="badge bg-danger-subtle text-danger align-middle rounded-pill ms-1">5</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link fw-semibold" data-bs-toggle="tab" href="#productnav-draft" role="tab">
+                                                            Draft
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div id="selection-element">
+                                                    <div class="my-n1 d-flex align-items-center text-muted">
+                                                        Select <div id="select-content" class="text-body fw-semibold px-1"></div> Result <button type="button" class="btn btn-link link-danger p-0 ms-3 material-shadow-none" data-bs-toggle="modal" data-bs-target="#removeItemModal">Remove</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card header -->
+                                    <div class="card-body">
+                                        <div class="tab-content text-muted">
+
+                                            <!-- ================= ALL PRODUCTS ================= -->
+                                            <div class="tab-pane active" id="productnav-all" role="tabpanel">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover align-middle mb-0">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Image</th>
+                                                                <th>Titre</th>
+                                                                <th>Prix</th>
+                                                                <th>Stock</th>
+                                                                <th>Catégorie</th>
+                                                                <th>Statut</th>
+                                                                <th>Commandes</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for produit in produits %}
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="{{ produit.image_principale.url }}" width="50" height="50" class="rounded">
+                                                                </td>
+                                                                <td>{{ produit.titre }}</td>
+                                                                <td>${{ produit.prix }}</td>
+
+                                                                <td>
+                                                                    {% if produit.stock > 0 %}
+                                                                        <span class="badge bg-success">{{ produit.stock }}</span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-danger">Rupture</span>
+                                                                    {% endif %}
+                                                                </td>
+
+                                                                <td>{{ produit.categorie }}</td>
+
+                                                                <td>
+                                                                    {% if produit.statut == "Published" %}
+                                                                        <span class="badge bg-success">Publié</span>
+                                                                    {% elif produit.statut == "Draft" %}
+                                                                        <span class="badge bg-warning">Brouillon</span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-info">Planifié</span>
+                                                                    {% endif %}
+                                                                </td>
+
+                                                                <td>{{ produit.commandes }}</td>
+
+                                                                <td>
+                                                                    <a href="{% url 'modifier_produit' produit.id %}" class="btn btn-sm btn-primary">
+                                                                        <i class="ri-edit-line"></i>
+                                                                    </a>
+                                                                    <a href="{% url 'supprimer_produit' produit.id %}" class="btn btn-sm btn-danger"
+                                                                    onclick="return confirm('Supprimer ce produit ?')">
+                                                                        <i class="ri-delete-bin-line"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            {% empty %}
+                                                            <tr>
+                                                                <td colspan="8" class="text-center text-muted">Aucun produit disponible</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- ================= PUBLISHED ================= -->
+                                            <div class="tab-pane" id="productnav-published" role="tabpanel">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover align-middle mb-0">
+                                                        <tbody>
+                                                            {% with found=False %}
+                                                            {% for produit in produits %}
+                                                                {% if produit.statut == "Published" %}
+                                                                    {% with found=True %}
+                                                                    <tr>
+                                                                        <td><img src="{{ produit.image_principale.url }}" width="40"></td>
+                                                                        <td>{{ produit.titre }}</td>
+                                                                        <td>${{ produit.prix }}</td>
+                                                                        <td>{{ produit.stock }}</td>
+                                                                        <td><span class="badge bg-success">Publié</span></td>
+                                                                    </tr>
+                                                                    {% endwith %}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                            {% if not found %}
+                                                            <tr>
+                                                                <td colspan="5" class="text-center text-muted">Aucun produit publié</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                            {% endwith %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- ================= DRAFT ================= -->
+                                            <div class="tab-pane" id="productnav-draft" role="tabpanel">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover align-middle mb-0">
+                                                        <tbody>
+                                                            {% with found=False %}
+                                                            {% for produit in produits %}
+                                                                {% if produit.statut == "Draft" %}
+                                                                    {% with found=True %}
+                                                                    <tr>
+                                                                        <td><img src="{{ produit.image_principale.url }}" width="40"></td>
+                                                                        <td>{{ produit.titre }}</td>
+                                                                        <td>${{ produit.prix }}</td>
+                                                                        <td>{{ produit.stock }}</td>
+                                                                        <td><span class="badge bg-warning">Brouillon</span></td>
+                                                                    </tr>
+                                                                    {% endwith %}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                            {% if not found %}
+                                                            <tr>
+                                                                <td colspan="5" class="text-center text-muted">Aucun brouillon</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                            {% endwith %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- end card body -->
+                                </div>
+                                <!-- end card -->
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> © Velzon.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                Design & Develop by Themesbrand
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+{% endblock contenu %}
+    
+
+
+{% block footer_js %}
+     <script src=" {% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src=" {% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src=" {% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+    <script src=" {% static 'assets/libs/feather-icons/feather.min.js' %}"></script>
+    <script src=" {% static 'assets/js/pages/plugins/lord-icon-2.1.0.js' %}"></script>
+    <script src=" {% static 'assets/js/plugins.js' %}"></script>
+
+    <!-- nouisliderribute js -->
+    <script src=" {% static 'assets/libs/nouislider/nouislider.min.js' %}"></script>
+    <script src=" {% static 'assets/libs/wnumb/wNumb.min.js' %}"></script>
+
+    <!-- gridjs js -->
+    <script src=" {% static 'assets/libs/gridjs/gridjs.umd.js' %}"></script>
+    <script src="../../../../unpkg.com/gridjs%406.2.0/plugins/selection/dist/selection.umd.js' %}"></script>
+    <!-- ecommerce product list -->
+    <script src=" {% static 'assets/js/pages/ecommerce-product-list.init.js' %}"></script>
+
+    <!-- App js -->
+    <script src=" {% static 'assets/js/app.js' %}"></script>
+</body>
+
+
+
+
+<!-- Mirrored from themesbrand.com/velzon/html/master/apps-ecommerce-products.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Nov 2025 14:39:09 GMT -->
+</html>
+{% endblock footer_js %}
+    
+    
+    
+

@@ -1,1 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+
+   {% block header %}
+
+    {% include 'entreprise/composant/menu/header.html' %}
+
+   {% endblock header %}
+{% block menu %}
+            {% include 'entreprise/composant/menu/menu_entreprise.html' %}
+{% endblock menu %}
+
+
+{% block contenu %}
+    {% include 'Entreprise/composant/contenu_entreprise.html' %}
+{% endblock contenu %}
+    
+    
+
+{% block footer_js %}
+    {% include 'entreprise/footer/footer.js.html' %}
+{% endblock footer_js %}

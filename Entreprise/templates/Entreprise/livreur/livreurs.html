@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'Entreprise/composant/menu/menu_entreprise.html' %}
+{% endblock menu %}
+
+{% block contenu %}
+
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- titre de la page -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                        <h4 class="mb-sm-0">Liste des livreurs</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Tables</a></li>
+                                <li class="breadcrumb-item active">Livreurs</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- fin titre de la page -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Ajouter, Modifier & Activer</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="listjs-table" id="customerList">
+                                <div class="row g-4 mb-3">
+                                    <div class="col-sm-auto">
+                                        <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal">
+                                            <i class="ri-add-line align-bottom me-1"></i> Ajouter
+                                        </button>
+                                    </div>
+                                    <div class="col-sm">
+                                        <div class="d-flex justify-content-sm-end">
+                                            <div class="search-box ms-2">
+                                                <input type="text" class="form-control search" placeholder="Rechercher..." id="search-input">
+                                                <i class="ri-search-line search-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tableau dynamique -->
+                                <div class="table-responsive table-card mt-3 mb-1">
+                                    <table class="table align-middle table-nowrap">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col" style="width: 50px;">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                                    </div>
+                                                </th>
+                                                <th class="sort" data-sort="customer_name">Livreur</th>
+                                                <th class="sort" data-sort="email">Email</th>
+                                                <th class="sort" data-sort="phone">Téléphone</th>
+                                                <th class="sort" data-sort="date">Date d'inscription</th>
+                                                <th class="sort" data-sort="status">Statut</th>
+                                                <th class="sort" data-sort="action">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            {% for livreur in livreurs %}
+                                            <tr>
+                                                <th scope="row">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="chk_child" value="{{ livreur.id }}">
+                                                    </div>
+                                                </th>
+                                                <td class="customer_name">{{ livreur.user.prenom }} {{ livreur.user.nom }}</td>
+                                                <td class="email">{{ livreur.user.email }}</td>
+                                                <td class="phone">{{ livreur.user.telephone }}</td>
+                                                <td class="date">{{ livreur.date_creation|date:"d M, Y" }}</td>
+                                                <td class="status">
+                                                    {% if livreur.statut == 'actif' %}
+                                                        <span class="badge bg-success-subtle text-success text-uppercase">Actif</span>
+                                                    {% elif livreur.statut == 'suspendu' %}
+                                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Suspendu</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning-subtle text-warning text-uppercase">En attente</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <div class="edit">
+                                                            <button class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                    data-id="{{ livreur.id }}"
+                                                                    data-prenom="{{ livreur.user.prenom }}"
+                                                                    data-nom="{{ livreur.user.nom }}"
+                                                                    data-email="{{ livreur.user.email }}"
+                                                                    data-telephone="{{ livreur.user.telephone }}"
+                                                                    data-vehicule="{{ livreur.vehicule }}"
+                                                                    data-zone="{{ livreur.zone_livraison }}"
+                                                                    data-statut="{{ livreur.statut }}">
+                                                                Modifier
+                                                            </button>
+                                                        </div>
+                                                        <div class="activate">
+                                                            <button class="btn btn-sm {% if livreur.statut == 'actif' %}btn-danger{% else %}btn-success{% endif %} remove-item-btn"
+                                                                    data-id="{{ livreur.id }}">
+                                                                {% if livreur.statut == 'actif' %}Suspendre{% else %}Activer{% endif %}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="7" class="text-center">Aucun livreur trouvé.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <div class="noresult" style="display: none">
+                                        <div class="text-center">
+                                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                            <h5 class="mt-2">Désolé ! Aucun résultat trouvé</h5>
+                                            <p class="text-muted mb-0">Aucun livreur ne correspond à votre recherche.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="d-flex justify-content-end mt-3">
+                                    <ul class="pagination listjs-pagination mb-0"></ul>
+                                </div>
+                            </div>
+                        </div><!-- fin card -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Ajouter / Modifier -->
+            <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light p-3">
+                            <h5 class="modal-title" id="exampleModalLabel">Ajouter / Modifier Livreur</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer" id="close-modal"></button>
+                        </div>
+                        <form method="POST" class="tablelist-form" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <input type="hidden" id="id-field" name="id">
+
+                                <div class="mb-3">
+                                    <label for="prenom-field" class="form-label">Prénom</label>
+                                    <input type="text" id="prenom-field" name="prenom" class="form-control" placeholder="Entrez le prénom"
+                                           value="{{ valeurs.prenom|default:'' }}" required>
+                                    {% if erreurs.prenom %}<div class="text-danger">{{ erreurs.prenom }}</div>{% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="nom-field" class="form-label">Nom</label>
+                                    <input type="text" id="nom-field" name="nom" class="form-control" placeholder="Entrez le nom"
+                                           value="{{ valeurs.nom|default:'' }}" required>
+                                    {% if erreurs.nom %}<div class="text-danger">{{ erreurs.nom }}</div>{% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email-field" class="form-label">Email</label>
+                                    <input type="email" id="email-field" name="email" class="form-control" placeholder="Entrez l'email"
+                                           value="{{ valeurs.email|default:'' }}" required>
+                                    {% if erreurs.email %}<div class="text-danger">{{ erreurs.email }}</div>{% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="telephone-field" class="form-label">Téléphone</label>
+                                    <input type="text" id="telephone-field" name="telephone" class="form-control" placeholder="Entrez le numéro de téléphone"
+                                           value="{{ valeurs.telephone|default:'' }}" required>
+                                    {% if erreurs.telephone %}<div class="text-danger">{{ erreurs.telephone }}</div>{% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="vehicule-field" class="form-label">Véhicule</label>
+                                    <input type="text" id="vehicule-field" name="vehicule" class="form-control" placeholder="Entrez le véhicule"
+                                           value="{{ valeurs.vehicule|default:'' }}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="zone-field" class="form-label">Zone de livraison</label>
+                                    <input type="text" id="zone-field" name="zone" class="form-control" placeholder="Entrez la zone"
+                                           value="{{ valeurs.zone|default:'' }}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="status-field" class="form-label">Statut</label>
+                                    <select class="form-control" id="status-field" name="statut" required>
+                                        <option value="">------</option>
+                                        <option value="actif" {% if valeurs.statut|default:'' == 'actif' %}selected{% endif %}>Actif</option>
+                                        <option value="suspendu" {% if valeurs.statut|default:'' == 'suspendu' %}selected{% endif %}>Suspendu</option>
+                                        <option value="en_attente" {% if valeurs.statut|default:'' == 'en_attente' %}selected{% endif %}>En attente</option>
+                                    </select>
+                                    {% if erreurs.statut %}
+                                        <div class="text-danger">{{ erreurs.statut }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password-field" class="form-label">Mot de passe</label>
+                                    <input type="password" id="password-field" name="mot_de_passe" class="form-control" placeholder="Entrez le mot de passe">
+                                    <div class="form-text">Laissez vide pour conserver l'ancien mot de passe.</div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-success" id="add-btn">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear())</script> © Shopi.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end d-none d-sm-block">
+                    Conception & Développement par Themesbrand
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Script JS pour modal + recherche/pagination -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+    // Pré-remplissage modal
+    document.querySelectorAll('.edit-item-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modal = document.getElementById('showModal');
+            modal.querySelector('#id-field').value = this.dataset.id;
+            modal.querySelector('#prenom-field').value = this.dataset.prenom;
+            modal.querySelector('#nom-field').value = this.dataset.nom;
+            modal.querySelector('#email-field').value = this.dataset.email;
+            modal.querySelector('#telephone-field').value = this.dataset.telephone;
+            modal.querySelector('#vehicule-field').value = this.dataset.vehicule || '';
+            modal.querySelector('#zone-field').value = this.dataset.zone || '';
+            modal.querySelector('#status-field').value = this.dataset.statut;
+            modal.querySelector('#password-field').value = '';
+        });
+    });
+
+    // Activation / suspension dynamique
+    document.querySelectorAll('.remove-item-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            fetch(`/entreprise/livreur/toggle/${id}/`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success){
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+        });
+    });
+
+    // List.js
+    const options = {
+        valueNames: ['customer_name','email','phone','date','status'],
+        page: 5,
+        pagination: true
+    };
+    const userList = new List('customerList', options);
+
+    // Recherche dynamique
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('keyup', function(){
+        userList.search(this.value);
+    });
+});
+</script>
+
+{% endblock contenu %}

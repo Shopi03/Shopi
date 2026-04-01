@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include 'Administrateur/composant/menu/menu_administrateur.html' %}
+{% endblock menu %}
+
+{% block contenu %}
+
+<div class="main-content">
+<div class="page-content">
+<div class="container-fluid">
+
+<!-- TITRE -->
+<div class="row">
+<div class="col-12">
+
+<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+
+<h4 class="mb-sm-0">Gestion des Codes de Création</h4>
+
+                                                    <!-- Accueil -->
+                                                        <div class="col-auto">
+                                                            <a href="{% url 'tableau_de_bord_admin' %}" class="btn btn-soft-success material-shadow-none" id="addproduct-btn">
+                                                                <i class=" align-middle me-1"></i> Accueil
+                                                            </a>
+                                                        </div>
+
+</div>
+
+</div>
+</div>
+
+<!-- STATISTIQUES -->
+
+<div class="row mb-4">
+
+<div class="col-md-6">
+<div class="card bg-success text-white">
+<div class="card-body">
+<h5>Codes disponibles</h5>
+<h3>{{ stats.total_disponible }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card bg-danger text-white">
+<div class="card-body">
+<h5>Codes utilisés</h5>
+<h3>{{ stats.total_utilise }}</h3>
+</div>
+</div>
+</div>
+
+</div>
+
+
+<!-- STATS PAR TYPE -->
+
+<div class="row mb-4">
+
+<div class="col-md-3">
+<div class="card text-center">
+<div class="card-body">
+<h6>Livreurs</h6>
+<p>{{ type_stats.livreur.disponible }} dispo</p>
+<p>{{ type_stats.livreur.utilise }} utilisés</p>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center">
+<div class="card-body">
+<h6>Entreprises</h6>
+<p>{{ type_stats.entreprise.disponible }} dispo</p>
+<p>{{ type_stats.entreprise.utilise }} utilisés</p>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center">
+<div class="card-body">
+<h6>Partenaires</h6>
+<p>{{ type_stats.partenaire.disponible }} dispo</p>
+<p>{{ type_stats.partenaire.utilise }} utilisés</p>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center">
+<div class="card-body">
+<h6>Administrateurs</h6>
+<p>{{ type_stats.administrateur.disponible }} dispo</p>
+<p>{{ type_stats.administrateur.utilise }} utilisés</p>
+</div>
+</div>
+</div>
+
+</div>
+
+
+<!-- GENERATION CODE -->
+
+<div class="card">
+
+<div class="card-header">
+<h4>Générer des Codes</h4>
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="row g-3">
+
+{% if request.user.role == "super_admin" %}
+
+<div class="col-md-3">
+<label class="form-label">Préfixe</label>
+<input type="text"
+name="prefix"
+class="form-control"
+placeholder="ex: LIV-">
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Nombre</label>
+<input type="number"
+name="nombre"
+value="1"
+min="1"
+max="500"
+class="form-control">
+</div>
+
+{% endif %}
+
+<div class="col-md-3">
+<label class="form-label">Type de compte</label>
+
+<select name="type_compte" class="form-control" required>
+
+<option value="">------</option>
+
+<option value="livreur">Livreur</option>
+<option value="entreprise">Entreprise</option>
+<option value="partenaire">Partenaire</option>
+
+{% if request.user.role == "super_admin" %}
+<option value="administrateur">Administrateur</option>
+{% endif %}
+
+</select>
+
+</div>
+
+{% if partenaires %}
+
+<div class="col-md-3">
+
+<label class="form-label">Associer partenaire</label>
+
+<select name="partenaire" class="form-control">
+
+<option value="">Aucun</option>
+
+{% for p in partenaires %}
+<option value="{{ p.user.id }}">
+{{ p.user.nom }}
+</option>
+{% endfor %}
+
+</select>
+
+</div>
+
+{% endif %}
+
+<div class="col-md-12 mt-3">
+
+<button class="btn btn-success">
+
+<i class="ri-add-line"></i>
+Générer les codes
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<!-- TABLEAU CODES -->
+
+<div class="card mt-4">
+
+<div class="card-header">
+<h4>Liste des Codes</h4>
+</div>
+
+<div class="card-body">
+
+<div id="codeList" class="listjs-table">
+
+<div class="row mb-3">
+
+<div class="col-md-4 ms-auto">
+
+<input class="search form-control"
+placeholder="Rechercher un code">
+
+</div>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table align-middle table-striped">
+
+<thead>
+
+<tr>
+
+<th class="sort" data-sort="code">Code</th>
+<th class="sort" data-sort="type">Type</th>
+<th class="sort" data-sort="createur">Créé par</th>
+<th class="sort" data-sort="partenaire">Partenaire</th>
+<th class="sort" data-sort="status">Statut</th>
+<th class="sort" data-sort="date">Date</th>
+
+</tr>
+
+</thead>
+
+<tbody class="list">
+
+{% for c in codes %}
+
+<tr>
+
+<td class="code">
+<b>{{ c.code }}</b>
+</td>
+
+<td class="type">
+{{ c.get_type_compte_display }}
+</td>
+
+<td class="createur">
+
+{% if c.createur %}
+{{ c.createur.nom }}
+{% else %}
+-
+{% endif %}
+
+</td>
+
+<td class="partenaire">
+
+{% if c.partenaire %}
+{{ c.partenaire.nom }}
+{% else %}
+-
+{% endif %}
+
+</td>
+
+<td class="status">
+
+{% if c.utilise %}
+<span class="badge bg-danger">Utilisé</span>
+{% else %}
+<span class="badge bg-success">Disponible</span>
+{% endif %}
+
+</td>
+
+<td class="date">
+
+{{ c.date_creation|date:"d/m/Y H:i" }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="6" class="text-center">
+Aucun code généré
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="d-flex justify-content-end mt-3">
+<ul class="pagination listjs-pagination"></ul>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+
+<script>
+
+new List("codeList",{
+
+valueNames:[
+"code",
+"type",
+"createur",
+"partenaire",
+"status",
+"date"
+],
+
+page:8,
+pagination:true
+
+})
+
+</script>
+
+{% endblock contenu %}

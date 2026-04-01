@@ -1,0 +1,1193 @@
+{% load static %}
+
+
+<div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <div class="col">
+
+                            <div class="h-100">
+                                <div class="row mb-3 pb-1">
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+
+                                            <!-- Message de bienvenue -->
+                                            <div class="flex-grow-1">
+                                                <h4 class="fs-16 mb-1">Bonjour, {{ super_admin.nom}} !</h4>
+                                                <p class="text-muted mb-0">Voici ce qui se passe dans votre boutique aujourd'hui.</p>
+                                            </div>
+
+                                            <!-- Formulaire date et actions -->
+                                            <div class="mt-3 mt-lg-0">
+                                                <form action="javascript:void(0);">
+                                                    <div class="row g-3 mb-0 align-items-center">
+
+                                                        <!-- Sélecteur de dates -->
+                                                        <div class="col-sm-auto">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control border-0 minimal-border dash-filter-picker shadow" 
+                                                                    data-provider="flatpickr" 
+                                                                    data-range-date="true" 
+                                                                    data-date-format="d M, Y" 
+                                                                    data-deafult-date="01 Jan 2022 to 31 Jan 2022">
+                                                                <div class="input-group-text bg-primary border-primary text-white">
+                                                                    <i class="ri-calendar-2-line"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                        <!-- Bouton Code de création -->
+                                                        <div class="col-auto">
+                                                            <a href="{% url 'gestion_code_creation' %}" class="btn btn-soft-success material-shadow-none" id="addproduct-btn">
+                                                                <i class="ri-add-circle-line align-middle me-1"></i> Code de Création
+                                                            </a>
+                                                        </div>
+                                                       
+                                                        <!-- Bouton de mise à jour rapide / stats -->
+                                                        <div class="col-auto">
+                                                            <button type="button" class="btn btn-soft-info btn-icon waves-effect material-shadow-none waves-light layout-rightside-btn">
+                                                                <i class="ri-pulse-line"></i>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+                                                    <!--end row-->
+                                                </form>
+                                            </div>
+
+                                        </div><!-- end flex container -->
+                                    </div><!-- end col -->
+                                </div>
+                                <!--end row-->
+
+                                <div class="row">
+
+                                   <!-- TOTAL UTILISATEURS -->
+                                    <div class="col-xl-3 col-md-6">
+                                        <div class="card card-animate">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                                            Total utilisateurs
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <h5 class="text-success fs-14 mb-0">
+                                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 %
+                                                        </h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                                    <div>
+                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                                                            <span class="counter-value" data-target="{{ total_users }}">0</span>
+                                                        </h4>
+                                                        <a href="#" class="text-decoration-underline">
+                                                            voir tous les utilisateurs
+                                                        </a>
+                                                    </div>
+                                                    <div class="avatar-sm flex-shrink-0">
+                                                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                                                            <i class="bx bx-user text-success"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Script compteur animé -->
+                                    <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const counters = document.querySelectorAll('.counter-value');
+                                        counters.forEach(counter => {
+                                            const updateCount = () => {
+                                                const target = +counter.getAttribute('data-target');
+                                                const count = +counter.innerText;
+                                                const increment = target / 200; // vitesse du compteur
+                                                if(count < target) {
+                                                    counter.innerText = Math.ceil(count + increment);
+                                                    setTimeout(updateCount, 10);
+                                                } else {
+                                                    counter.innerText = target;
+                                                }
+                                            };
+                                            updateCount();
+                                        });
+                                    });
+                                    </script>
+
+                                   <!-- TOTAL ENTREPRISES -->
+                                    <div class="col-xl-3 col-md-6">
+                                        <div class="card card-animate">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                                            Entreprises
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <h5 class="text-success fs-14 mb-0">
+                                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +0 % <!-- tu peux calculer le pourcentage si tu veux -->
+                                                        </h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                                    <div>
+                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                                                            <span class="counter-value" data-target="{{ total_entreprises }}">0</span>
+                                                        </h4>
+                                                        <a href="{% url 'gestion_entreprise' %}" class="text-decoration-underline">
+                                                            Voir toutes les entreprises
+                                                        </a>
+                                                    </div>
+                                                    <div class="avatar-sm flex-shrink-0">
+                                                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                                                            <i class="bx bx-building text-info"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- TOTAL ADMINISTRATEURS -->
+<div class="col-xl-3 col-md-6">
+    <div class="card card-animate">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 overflow-hidden">
+                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        Administrateurs
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <h5 class="text-success fs-14 mb-0">
+                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +0 % <!-- tu peux calculer le pourcentage si besoin -->
+                    </h5>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end justify-content-between mt-4">
+                <div>
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                        <span class="counter-value" data-target="{{ total_admins }}">0</span>
+                    </h4>
+                    <a href="{% url 'gestion_administrateur' %}" class="text-decoration-underline">
+                        Voir les détails
+                    </a>
+                </div>
+                <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-warning-subtle rounded fs-3">
+                        <i class="bx bx-user-circle text-warning"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- TOTAL LIVREURS -->
+<div class="col-xl-3 col-md-6">
+    <div class="card card-animate">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 overflow-hidden">
+                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        Livreurs
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <h5 class="text-success fs-14 mb-0">
+                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +0 % <!-- pourcentage si nécessaire -->
+                    </h5>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end justify-content-between mt-4">
+                <div>
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                        <span class="counter-value" data-target="{{ total_livreurs }}">0</span>
+                    </h4>
+                    <a href="{% url 'gestion_livreur' %}" class="text-decoration-underline">
+                        Voir les détails
+                    </a>
+                </div>
+                <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-info-subtle rounded fs-3">
+                        <i class="bx bx-user-circle text-info"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- TOTAL PARTENAIRES -->
+<div class="col-xl-3 col-md-6">
+    <div class="card card-animate">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 overflow-hidden">
+                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        Partenaires
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <h5 class="text-success fs-14 mb-0">
+                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +0 % <!-- pourcentage si nécessaire -->
+                    </h5>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end justify-content-between mt-4">
+                <div>
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                        <span class="counter-value" data-target="{{ total_partenaires }}">0</span>
+                    </h4>
+                    <a href="{% url 'gestion_partenaire' %}" class="text-decoration-underline">
+                        Voir les détails
+                    </a>
+                </div>
+                <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-warning-subtle rounded fs-3">
+                        <i class="bx bx-user-circle text-warning"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- TOTAL CLIENTS -->
+<div class="col-xl-3 col-md-6">
+    <div class="card card-animate">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 overflow-hidden">
+                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        Clients
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <h5 class="text-success fs-14 mb-0">
+                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +0 % <!-- pourcentage si nécessaire -->
+                    </h5>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end justify-content-between mt-4">
+                <div>
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                        <span class="counter-value" data-target="{{ total_clients }}">0</span>
+                    </h4>
+                    <a href="#" class="text-decoration-underline">
+                        Voir les détails
+                    </a>
+                </div>
+                <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-warning-subtle rounded fs-3">
+                        <i class="bx bx-user-circle text-warning"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- TOTAL CORRESPONDANTS -->
+<div class="col-xl-3 col-md-6">
+    <div class="card card-animate">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 overflow-hidden">
+                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        Correspondants
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <h5 class="text-success fs-14 mb-0">
+                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +0 % <!-- pourcentage si nécessaire -->
+                    </h5>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end justify-content-between mt-4">
+                <div>
+                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                        <span class="counter-value" data-target="{{ total_correspondants }}">0</span>
+                    </h4>
+                    <a href="#" class="text-decoration-underline">
+                        Voir les détails
+                    </a>
+                </div>
+                <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-warning-subtle rounded fs-3">
+                        <i class="bx bx-user-circle text-warning"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                                    <!-- SOLDE -->
+                                    <div class="col-xl-3 col-md-6">
+                                        <div class="card card-animate">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                                            Solde
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <h5 class="text-muted fs-14 mb-0">
+                                                            +0.00 %
+                                                        </h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                                    <div>
+                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                                                            GNF <span class="counter-value" data-target="165890000">0</span>
+                                                        </h4>
+                                                        <a href="#" class="text-decoration-underline">
+                                                            Retirer de l'argent
+                                                        </a>
+                                                    </div>
+                                                    <div class="avatar-sm flex-shrink-0">
+                                                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                                                            <i class="bx bx-wallet text-primary"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div> <!-- end row-->
+
+                                <div class="row">
+                                    <div class="col-xl-8">
+                                        <div class="card">
+                                            
+                                            <!-- En-tête de la carte -->
+                                            <div class="card-header border-0 align-items-center d-flex">
+                                                <h4 class="card-title mb-0 flex-grow-1">Revenus</h4>
+                                                <div>
+                                                    <button type="button" class="btn btn-soft-secondary material-shadow-none btn-sm">
+                                                        TOUT
+                                                    </button>
+                                                    <button type="button" class="btn btn-soft-secondary material-shadow-none btn-sm">
+                                                        1 Mois
+                                                    </button>
+                                                    <button type="button" class="btn btn-soft-secondary material-shadow-none btn-sm">
+                                                        6 Mois
+                                                    </button>
+                                                    <button type="button" class="btn btn-soft-primary material-shadow-none btn-sm">
+                                                        1 An
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- Fin en-tête -->
+
+                                            <!-- Statistiques -->
+                                            <div class="card-header p-0 border-0 bg-light-subtle">
+                                                <div class="row g-0 text-center">
+                                                    
+                                                    <!-- Commandes -->
+                                                    <div class="col-6 col-sm-3">
+                                                        <div class="p-3 border border-dashed border-start-0">
+                                                            <h5 class="mb-1">
+                                                                <span class="counter-value" data-target="7585">0</span>
+                                                            </h5>
+                                                            <p class="text-muted mb-0">Commandes</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Gains -->
+                                                    <div class="col-6 col-sm-3">
+                                                        <div class="p-3 border border-dashed border-start-0">
+                                                            <h5 class="mb-1">
+                                                                $<span class="counter-value" data-target="22.89">0</span>k
+                                                            </h5>
+                                                            <p class="text-muted mb-0">Gains</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Remboursements -->
+                                                    <div class="col-6 col-sm-3">
+                                                        <div class="p-3 border border-dashed border-start-0">
+                                                            <h5 class="mb-1">
+                                                                <span class="counter-value" data-target="367">0</span>
+                                                            </h5>
+                                                            <p class="text-muted mb-0">Remboursements</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Taux de conversion -->
+                                                    <div class="col-6 col-sm-3">
+                                                        <div class="p-3 border border-dashed border-start-0 border-end-0">
+                                                            <h5 class="mb-1 text-success">
+                                                                <span class="counter-value" data-target="18.92">0</span>%
+                                                            </h5>
+                                                            <p class="text-muted mb-0">Taux de conversion</p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <!-- Fin statistiques -->
+
+                                            <!-- Graphique -->
+                                            <div class="card-body p-0 pb-2">
+                                                <div class="w-100">
+                                                    <div id="customer_impression_charts"
+                                                        data-colors='["--vz-primary", "--vz-success", "--vz-danger"]'
+                                                        data-colors-minimal='["--vz-light", "--vz-primary", "--vz-info"]'
+                                                        data-colors-saas='["--vz-success", "--vz-info", "--vz-danger"]'
+                                                        data-colors-modern='["--vz-warning", "--vz-primary", "--vz-success"]'
+                                                        data-colors-interactive='["--vz-info", "--vz-primary", "--vz-danger"]'
+                                                        data-colors-creative='["--vz-warning", "--vz-primary", "--vz-danger"]'
+                                                        data-colors-corporate='["--vz-light", "--vz-primary", "--vz-secondary"]'
+                                                        data-colors-galaxy='["--vz-secondary", "--vz-primary", "--vz-primary-rgb, 0.50"]'
+                                                        data-colors-classic='["--vz-light", "--vz-primary", "--vz-secondary"]'
+                                                        data-colors-vintage='["--vz-success", "--vz-primary", "--vz-secondary"]'
+                                                        class="apex-charts"
+                                                        dir="ltr">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Fin graphique -->
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-4">
+                                        <!-- carte -->
+                                        <div class="card card-height-100">
+                                            <div class="card-header align-items-center d-flex">
+                                                <h4 class="card-title mb-0 flex-grow-1">Ventes par localisation</h4>
+                                                <div class="flex-shrink-0">
+                                                    <button type="button" class="btn btn-soft-primary material-shadow-none btn-sm">
+                                                        Exporter le rapport
+                                                    </button>
+                                                </div>
+                                            </div><!-- fin header de la carte -->
+
+                                            <!-- corps de la carte -->
+                                            <div class="card-body">
+
+                                                <div id="sales-by-locations" data-colors='["--vz-light", "--vz-success", "--vz-primary"]' data-colors-interactive='["--vz-light", "--vz-info", "--vz-primary"]' style="height: 269px" dir="ltr"></div>
+
+                                                <div class="px-2 py-2 mt-1">
+                                                    <p class="mb-1">Conakry <span class="float-end">75%</span></p>
+                                                    <div class="progress mt-2" style="height: 6px;">
+                                                        <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="75"></div>
+                                                    </div>
+
+                                                    <p class="mt-3 mb-1">Kindia <span class="float-end">47%</span></p>
+                                                    <div class="progress mt-2" style="height: 6px;">
+                                                        <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 47%" aria-valuenow="47" aria-valuemin="0" aria-valuemax="47"></div>
+                                                    </div>
+
+                                                    <p class="mt-3 mb-1">Labé <span class="float-end">82%</span></p>
+                                                    <div class="progress mt-2" style="height: 6px;">
+                                                        <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="82"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- fin corps de la carte -->
+                                        </div>
+                                        <!-- fin carte -->
+                                    </div>
+                                    <!-- end col -->
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="card">
+                                            <div class="card-header align-items-center d-flex">
+                                                <h4 class="card-title mb-0 flex-grow-1">Produits les plus vendus</h4>
+                                                <div class="flex-shrink-0">
+                                                    <div class="dropdown card-header-dropdown">
+                                                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown">
+                                                            <span class="fw-semibold text-uppercase fs-12">Trier par :</span>
+                                                            <span class="text-muted">Aujourd'hui<i class="mdi mdi-chevron-down ms-1"></i></span>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a class="dropdown-item" href="#">Aujourd'hui</a>
+                                                            <a class="dropdown-item" href="#">Hier</a>
+                                                            <a class="dropdown-item" href="#">7 derniers jours</a>
+                                                            <a class="dropdown-item" href="#">30 derniers jours</a>
+                                                            <a class="dropdown-item" href="#">Ce mois-ci</a>
+                                                            <a class="dropdown-item" href="#">Mois dernier</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <div class="table-responsive table-card">
+                                                    <table class="table table-hover table-centered align-middle table-nowrap mb-0">
+                                                        <tbody>
+
+                                                            <!-- Produit 1 -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                                            <img src="{% static 'assets/images/products/img-1.png'%}" class="img-fluid d-block" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1">
+                                                                                <a href="#" class="text-reset">T-Shirts de marque</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">24 Avr 2021</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 249 400</h5>
+                                                                    <span class="text-muted">Prix</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">62</h5>
+                                                                    <span class="text-muted">Commandes</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">510</h5>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 15 462 800</h5>
+                                                                    <span class="text-muted">Montant</span>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Produit 2 -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                                            <img src="{% static 'assets/images/products/img-2.png'%}" class="img-fluid d-block" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1">
+                                                                                <a href="#" class="text-reset">Chaise en bois courbé</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">19 Mar 2021</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 732 720</h5>
+                                                                    <span class="text-muted">Prix</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">35</h5>
+                                                                    <span class="text-muted">Commandes</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">
+                                                                        <span class="badge bg-danger-subtle text-danger">Rupture de stock</span>
+                                                                    </h5>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 25 645 200</h5>
+                                                                    <span class="text-muted">Montant</span>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Produit 3 -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                                            <img src="{% static 'assets/images/products/img-3.png'%}" class="img-fluid d-block" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1">
+                                                                                <a href="#" class="text-reset">Gobelet en papier Borosil</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">01 Mar 2021</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 120 400</h5>
+                                                                    <span class="text-muted">Prix</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">80</h5>
+                                                                    <span class="text-muted">Commandes</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">749</h5>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 9 632 000</h5>
+                                                                    <span class="text-muted">Montant</span>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Produit 4 -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                                            <img src="{% static 'assets/images/products/img-4.png'%}" class="img-fluid d-block" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1">
+                                                                                <a href="#" class="text-reset">Canapé une place</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">11 Fév 2021</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 1 096 500</h5>
+                                                                    <span class="text-muted">Prix</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">56</h5>
+                                                                    <span class="text-muted">Commandes</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">
+                                                                        <span class="badge bg-danger-subtle text-danger">Rupture de stock</span>
+                                                                    </h5>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 61 404 000</h5>
+                                                                    <span class="text-muted">Montant</span>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Produit 5 -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="avatar-sm bg-light rounded p-1 me-2">
+                                                                            <img src="{% static 'assets/images/products/img-5.png'%}" class="img-fluid d-block" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1">
+                                                                                <a href="#" class="text-reset">Casque Stillbird</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">17 Jan 2021</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 464 400</h5>
+                                                                    <span class="text-muted">Prix</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">74</h5>
+                                                                    <span class="text-muted">Commandes</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">805</h5>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td>
+                                                                    <h5 class="fs-14 my-1 fw-normal">FG 34 365 600</h5>
+                                                                    <span class="text-muted">Montant</span>
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6">
+                                        <div class="card card-height-100">
+                                            <div class="card-header align-items-center d-flex">
+                                                <h4 class="card-title mb-0 flex-grow-1">Meilleurs Vendeurs</h4>
+                                                <div class="flex-shrink-0">
+                                                    <div class="dropdown card-header-dropdown">
+                                                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown">
+                                                            <span class="text-muted">Rapport<i class="mdi mdi-chevron-down ms-1"></i></span>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a class="dropdown-item" href="#">Télécharger le rapport</a>
+                                                            <a class="dropdown-item" href="#">Exporter</a>
+                                                            <a class="dropdown-item" href="#">Importer</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <div class="table-responsive table-card">
+                                                    <table class="table table-centered table-hover align-middle table-nowrap mb-0">
+                                                        <tbody>
+
+                                                            <!-- Conakry -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="flex-shrink-0 me-2">
+                                                                            <img src="{% static 'assets/images/companies/img-1.png'%}" class="avatar-sm p-2" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1 fw-medium">
+                                                                                <a href="#" class="text-reset">Conakry Market Pro</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">Conakry</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="text-muted">Sacs et Portefeuilles</span></td>
+                                                                <td>
+                                                                    <p class="mb-0">8547</p>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td><span class="text-muted">4 654 320 000 GNF</span></td>
+                                                                <td>
+                                                                    <h5 class="fs-14 mb-0">32%
+                                                                        <i class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i>
+                                                                    </h5>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Kankan -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="flex-shrink-0 me-2">
+                                                                            <img src="{% static 'assets/images/companies/img-2.png'%}" class="avatar-sm p-2" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1 fw-medium">
+                                                                                <a href="#" class="text-reset">Kankan Digital Store</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">Kankan</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="text-muted">Montres</span></td>
+                                                                <td>
+                                                                    <p class="mb-0">895</p>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td><span class="text-muted">645 258 000 GNF</span></td>
+                                                                <td>
+                                                                    <h5 class="fs-14 mb-0">79%
+                                                                        <i class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i>
+                                                                    </h5>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Labé -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="flex-shrink-0 me-2">
+                                                                            <img src="{% static 'assets/images/companies/img-3.png'%}" class="avatar-sm p-2" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1 fw-medium">
+                                                                                <a href="#" class="text-reset">Labé Accessoires</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">Labé</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="text-muted">Accessoires Moto & Vélo</span></td>
+                                                                <td>
+                                                                    <p class="mb-0">3470</p>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td><span class="text-muted">392 160 000 GNF</span></td>
+                                                                <td>
+                                                                    <h5 class="fs-14 mb-0">90%
+                                                                        <i class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i>
+                                                                    </h5>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Kindia -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="flex-shrink-0 me-2">
+                                                                            <img src="{% static 'assets/images/companies/img-8.png'%}" class="avatar-sm p-2" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1 fw-medium">
+                                                                                <a href="#" class="text-reset">Kindia Fashion</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">Kindia</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="text-muted">Vêtements</span></td>
+                                                                <td>
+                                                                    <p class="mb-0">5488</p>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td><span class="text-muted">253 321 600 GNF</span></td>
+                                                                <td>
+                                                                    <h5 class="fs-14 mb-0">40%
+                                                                        <i class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i>
+                                                                    </h5>
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Nzérékoré -->
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="flex-shrink-0 me-2">
+                                                                            <img src="{% static 'assets/images/companies/img-5.png'%}" class="avatar-sm p-2" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="fs-14 my-1 fw-medium">
+                                                                                <a href="#" class="text-reset">Nzérékoré Mobilier</a>
+                                                                            </h5>
+                                                                            <span class="text-muted">Nzérékoré</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="text-muted">Meubles</span></td>
+                                                                <td>
+                                                                    <p class="mb-0">4100</p>
+                                                                    <span class="text-muted">Stock</span>
+                                                                </td>
+                                                                <td><span class="text-muted">96 836 000 GNF</span></td>
+                                                                <td>
+                                                                    <h5 class="fs-14 mb-0">57%
+                                                                        <i class="ri-bar-chart-fill text-success fs-16 align-middle ms-2"></i>
+                                                                    </h5>
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
+                                                    <div class="col-sm">
+                                                        <div class="text-muted">
+                                                            Affichage de <span class="fw-semibold">5</span> sur <span class="fw-semibold">25</span> résultats
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-auto mt-3 mt-sm-0">
+                                                        <ul class="pagination pagination-separated pagination-sm mb-0 justify-content-center">
+                                                            <li class="page-item disabled">
+                                                                <a href="#" class="page-link">←</a>
+                                                            </li>
+                                                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                                            <li class="page-item active"><a href="#" class="page-link">2</a></li>
+                                                            <li class="page-item"><a href="#" class="page-link">3</a></li>
+                                                            <li class="page-item"><a href="#" class="page-link">→</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                              <div class="row">
+
+                                <!-- VISITES DE LA BOUTIQUE -->
+                                <div class="col-xl-4">
+                                    <div class="card card-height-100">
+                                        <div class="card-header align-items-center d-flex">
+                                            <h4 class="card-title mb-0 flex-grow-1">Visites de la boutique par source</h4>
+                                            <div class="flex-shrink-0">
+                                                <div class="dropdown card-header-dropdown">
+                                                    <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown">
+                                                        <span class="text-muted">Rapport<i class="mdi mdi-chevron-down ms-1"></i></span>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a class="dropdown-item" href="#">Télécharger le rapport</a>
+                                                        <a class="dropdown-item" href="#">Exporter</a>
+                                                        <a class="dropdown-item" href="#">Importer</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div id="store-visits-source"
+                                                class="apex-charts"
+                                                dir="ltr">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- COMMANDES RÉCENTES -->
+                                <div class="col-xl-8">
+                                    <div class="card">
+                                        <div class="card-header align-items-center d-flex">
+                                            <h4 class="card-title mb-0 flex-grow-1">Commandes Récentes</h4>
+                                            <div class="flex-shrink-0">
+                                                <button type="button" class="btn btn-soft-info btn-sm">
+                                                    <i class="ri-file-list-3-line align-middle"></i> Générer un rapport
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="table-responsive table-card">
+                                                <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                                                    <thead class="text-muted table-light">
+                                                        <tr>
+                                                            <th>ID Commande</th>
+                                                            <th>Client</th>
+                                                            <th>Produit</th>
+                                                            <th>Montant</th>
+                                                            <th>Vendeur</th>
+                                                            <th>Statut</th>
+                                                            <th>Note</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+
+                                                        <!-- COMMANDE 1 -->
+                                                        <tr>
+                                                            <td><a href="#" class="fw-medium link-primary">#GN2112</a></td>
+                                                            <td>Mamadou Diallo</td>
+                                                            <td>Vêtements</td>
+                                                            <td><span class="text-success">937 400 GNF</span></td>
+                                                            <td>Kindia Fashion</td>
+                                                            <td><span class="badge bg-success-subtle text-success">Payée</span></td>
+                                                            <td><h5 class="fs-14 fw-medium mb-0">5.0<span class="text-muted fs-11 ms-1">(61 avis)</span></h5></td>
+                                                        </tr>
+
+                                                        <!-- COMMANDE 2 -->
+                                                        <tr>
+                                                            <td><a href="#" class="fw-medium link-primary">#GN2111</a></td>
+                                                            <td>Fatoumata Camara</td>
+                                                            <td>Rangement Cuisine</td>
+                                                            <td><span class="text-success">1 281 400 GNF</span></td>
+                                                            <td>Conakry  Pro</td>
+                                                            <td><span class="badge bg-warning-subtle text-warning">En attente</span></td>
+                                                            <td><h5 class="fs-14 fw-medium mb-0">4.5<span class="text-muted fs-11 ms-1">(61 avis)</span></h5></td>
+                                                        </tr>
+
+                                                        <!-- COMMANDE 3 -->
+                                                        <tr>
+                                                            <td><a href="#" class="fw-medium link-primary">#GN2109</a></td>
+                                                            <td>Ibrahima Bah</td>
+                                                            <td>Accessoires Moto</td>
+                                                            <td><span class="text-success">1 849 000 GNF</span></td>
+                                                            <td>Labé Accessoires</td>
+                                                            <td><span class="badge bg-success-subtle text-success">Payée</span></td>
+                                                            <td><h5 class="fs-14 fw-medium mb-0">4.9<span class="text-muted fs-11 ms-1">(89 avis)</span></h5></td>
+                                                        </tr>
+
+                                                        <!-- COMMANDE 4 -->
+                                                        <tr>
+                                                            <td><a href="#" class="fw-medium link-primary">#GN2108</a></td>
+                                                            <td>Oumou Barry</td>
+                                                            <td>Meubles</td>
+                                                            <td><span class="text-success">1 711 400 GNF</span></td>
+                                                            <td>Nzérékoré Mobilier</td>
+                                                            <td><span class="badge bg-danger-subtle text-danger">Non payée</span></td>
+                                                            <td><h5 class="fs-14 fw-medium mb-0">4.3<span class="text-muted fs-11 ms-1">(47 avis)</span></h5></td>
+                                                        </tr>
+
+                                                        <!-- COMMANDE 5 -->
+                                                        <tr>
+                                                            <td><a href="#" class="fw-medium link-primary">#GN2107</a></td>
+                                                            <td>Abdoulaye Sylla</td>
+                                                            <td>Sacs et Portefeuilles</td>
+                                                            <td><span class="text-success">2 838 000 GNF</span></td>
+                                                            <td>Kankan Digital Store</td>
+                                                            <td><span class="badge bg-success-subtle text-success">Payée</span></td>
+                                                            <td><h5 class="fs-14 fw-medium mb-0">4.7<span class="text-muted fs-11 ms-1">(161 avis)</span></h5></td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            </div> <!-- end .h-100-->
+
+                        </div> <!-- end col -->
+
+                        <div class="col-auto layout-rightside-col">
+                            <div class="overlay"></div>
+                            <div class="layout-rightside">
+                                <div class="card h-100 rounded-0">
+                                    <div class="card-body p-0">
+
+                                        <!-- ACTIVITÉ RÉCENTE -->
+                                        <div class="p-3">
+                                            <h6 class="text-muted mb-0 text-uppercase fw-semibold">Activité Récente</h6>
+                                        </div>
+
+                                        <div style="max-height: 410px;" class="p-3 pt-0">
+
+                                            <div class="acitivity-item d-flex mb-3">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">Achat effectué par Mamadou Diallo</h6>
+                                                    <p class="text-muted mb-1">Montre connectée Smart Tech GN</p>
+                                                    <small class="text-muted">14:14 Aujourd’hui</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="acitivity-item d-flex mb-3">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">Nouvelle collection ajoutée</h6>
+                                                    <p class="text-muted mb-1">Par Conakry Fashion Store</p>
+                                                    <small class="text-muted">Hier à 21:47</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="acitivity-item d-flex mb-3">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">Fatoumata Camara a aimé un produit</h6>
+                                                    <p class="text-muted mb-1">Les utilisateurs peuvent aimer les produits sur la plateforme.</p>
+                                                    <small class="text-muted">25 Déc 2025</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="acitivity-item d-flex mb-3">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">Offres spéciales aujourd’hui - Labé Digital Market</h6>
+                                                    <p class="text-muted mb-1">Offre valable pour les commandes supérieures à 500 000 GNF.</p>
+                                                    <small class="text-muted">12 Déc 2025</small>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- TOP CATÉGORIES -->
+                                        <div class="p-3 mt-2">
+                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">Top 10 Catégories</h6>
+
+                                            <ol class="ps-3 text-muted">
+                                                <li class="py-1">Téléphones & Accessoires (10 294)</li>
+                                                <li class="py-1">Ordinateurs (6 256)</li>
+                                                <li class="py-1">Électronique (3 479)</li>
+                                                <li class="py-1">Maison & Meubles (2 275)</li>
+                                                <li class="py-1">Alimentation (1 950)</li>
+                                                <li class="py-1">Mode (1 582)</li>
+                                                <li class="py-1">Appareils électroménagers (1 037)</li>
+                                                <li class="py-1">Beauté & Jouets (924)</li>
+                                                <li class="py-1">Boissons & Produits alimentaires (701)</li>
+                                                <li class="py-1">Jeux & Divertissement (239)</li>
+                                            </ol>
+
+                                            <div class="mt-3 text-center">
+                                                <a href="#" class="text-muted text-decoration-underline">Voir toutes les catégories</a>
+                                            </div>
+                                        </div>
+
+                                        <!-- AVIS PRODUITS -->
+                                        <div class="p-3">
+                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">Avis Produits</h6>
+
+                                            <div class="card border border-dashed shadow-none mb-2">
+                                                <div class="card-body">
+                                                    <p class="text-muted fst-italic">" Très bon produit avec beaucoup de fonctionnalités. "</p>
+                                                    <div class="text-warning">★★★★★</div>
+                                                    <div class="text-end text-muted">- par Pharmacie Guinée Plus</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card border border-dashed shadow-none mb-2">
+                                                <div class="card-body">
+                                                    <p class="text-muted fst-italic">" Plateforme très facile à utiliser et professionnelle. "</p>
+                                                    <div class="text-warning">★★★★☆</div>
+                                                    <div class="text-end text-muted">- par Ibrahima Bah</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- AVIS CLIENTS -->
+                                        <div class="p-3">
+                                            <h6 class="text-muted mb-3 text-uppercase fw-semibold">Avis Clients</h6>
+
+                                            <div class="bg-light px-3 py-2 rounded-2 mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="text-warning">★★★★☆</div>
+                                                    <h6 class="mb-0">4.5 sur 5</h6>
+                                                </div>
+                                            </div>
+
+                                            <div class="text-center text-muted">
+                                                Total 5 500 avis
+                                            </div>
+
+                                        </div>
+
+                                        <!-- INVITER VENDEUR -->
+                                        <div class="card sidebar-alert bg-light border-0 text-center mx-4 mb-3 mt-3">
+                                            <div class="card-body">
+                                                <div class="mt-2">
+                                                    <h5>Inviter un nouveau vendeur</h5>
+                                                    <p class="text-muted">
+                                                        Recommandez un vendeur et gagnez 860 000 GNF par parrainage.
+                                                    </p>
+                                                    <button type="button" class="btn btn-primary rounded-pill">
+                                                        Inviter maintenant
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> © Velzon.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                Design & Develop by Themesbrand
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+        
+
+

@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'Administrateur/composant/menu/menu_administrateur.html' %}
+{% endblock menu %}
+
+{% block contenu %}
+
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- ================= TITRE ================= -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                        <h4 class="mb-sm-0">Liste des Partenaires</h4>
+                         <!-- Accueil -->
+                                                        <div class="col-auto">
+                                                            <a href="{% url 'tableau_de_bord_admin' %}" class="btn btn-soft-success material-shadow-none" id="addproduct-btn">
+                                                                <i class=" align-middle me-1"></i> Accueil
+                                                            </a>
+                                                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TABLEAU ================= -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Ajouter, Modifier & Activer</h4>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="listjs-table" id="partnerList">
+
+                                <!-- ===== BOUTONS ===== -->
+                                <div class="row g-4 mb-3">
+                                    <div class="col-sm-auto">
+                                        <button
+                                            type="button"
+                                            class="btn btn-success add-btn"
+                                            data-bs-toggle="modal"
+                                            id="create-btn"
+                                            data-bs-target="#showModal">
+                                            <i class="ri-add-line align-bottom me-1"></i> Ajouter
+                                        </button>
+                                    </div>
+
+                                    <div class="col-sm">
+                                        <div class="d-flex justify-content-sm-end">
+                                            <div class="search-box ms-2">
+                                                <input type="text" class="form-control search" placeholder="Rechercher..." id="search-input">
+                                                <i class="ri-search-line search-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ===== TABLE ===== -->
+                                <div class="table-responsive table-card mt-3 mb-1">
+                                    <table class="table align-middle table-nowrap">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width:50px">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    </div>
+                                                </th>
+                                                <th>Nom & Prénom</th>
+                                                <th>Email</th>
+                                                <th>Téléphone</th>
+                                                <th>Rôle</th>
+                                                <th>Créé par</th>
+                                                <th>Statut</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody class="list form-check-all">
+                                            {% for partenaire in partenaires %}
+                                            <tr>
+                                                <th>
+                                                    <input class="form-check-input" type="checkbox" value="{{ partenaire.id }}">
+                                                </th>
+
+                                                <td>{{ partenaire.user.prenom }} {{ partenaire.user.nom }}</td>
+                                                <td>{{ partenaire.user.email }}</td>
+                                                <td>{{ partenaire.user.telephone }}</td>
+                                                <td>{{ partenaire.user.role|capfirst }}</td>
+
+                                                <td>
+                                                    {% if partenaire.cree_par %}
+                                                        {{ partenaire.cree_par.prenom }} {{ partenaire.cree_par.nom }}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
+
+                                                <td>
+                                                    {% if partenaire.statut == 'actif' %}
+                                                        <span class="badge bg-success-subtle text-success">Actif</span>
+                                                    {% elif partenaire.statut == 'suspendu' %}
+                                                        <span class="badge bg-danger-subtle text-danger">Suspendu</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning-subtle text-warning">En attente</span>
+                                                    {% endif %}
+                                                </td>
+
+                                                <td>{{ partenaire.user.date_joined|date:"d M Y" }}</td>
+
+                                                <td>
+                                                    <div class="d-flex gap-2">
+
+                                                        <!-- Modifier -->
+                                                        <button
+                                                            class="btn btn-sm btn-success edit-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            data-id="{{ partenaire.id }}"
+                                                            data-email="{{ partenaire.user.email }}"
+                                                            data-telephone="{{ partenaire.user.telephone }}"
+                                                            data-statut="{{ partenaire.statut }}"
+                                                        >
+                                                        Modifier
+                                                        </button>
+
+                                                        <!-- Activer -->
+                                                        <button
+                                                            class="btn btn-sm {% if partenaire.statut == 'actif' %}btn-danger{% else %}btn-success{% endif %}">
+                                                            {% if partenaire.statut == 'actif' %}Suspendre{% else %}Activer{% endif %}
+                                                        </button>
+
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="9" class="text-center">Aucun partenaire trouvé.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= MODAL ================= -->
+
+            <div class="modal fade" id="showModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <div class="modal-header bg-light p-3">
+                            <h5 class="modal-title">Ajouter / Modifier Partenaire</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <form method="POST" autocomplete="off">
+                            {% csrf_token %}
+
+                            <div class="modal-body">
+
+                                <input type="hidden" id="id-field" name="id" value="{{ valeurs.id|default:'' }}">
+
+                                <!-- EMAIL -->
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email-field"
+                                        class="form-control {% if erreurs.email %}is-invalid{% endif %}"
+                                        value="{{ valeurs.email|default:'' }}"
+                                        placeholder="Entrez l'email">
+
+                                    {% if erreurs.email %}
+                                        <div class="invalid-feedback">
+                                            {{ erreurs.email }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- TELEPHONE -->
+                                <div class="mb-3">
+                                    <label class="form-label">Téléphone</label>
+
+                                    <input
+                                        type="text"
+                                        name="telephone"
+                                        id="telephone-field"
+                                        class="form-control {% if erreurs.telephone %}is-invalid{% endif %}"
+                                        value="{{ valeurs.telephone|default:'' }}"
+                                        placeholder="Entrez le numéro">
+
+                                    {% if erreurs.telephone %}
+                                        <div class="invalid-feedback">
+                                            {{ erreurs.telephone }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- CODE -->
+                                <div class="mb-3">
+                                    <label class="form-label">Code de création</label>
+
+                                    <select
+                                        name="code_creation"
+                                        id="code-field"
+                                        class="form-control {% if erreurs.code_creation %}is-invalid{% endif %}">
+
+                                        <option value="">------</option>
+
+                                        {% for code in codes_disponibles %}
+                                            <option value="{{ code.code }}"
+                                            {% if valeurs.code_creation == code.code %}selected{% endif %}>
+                                                {{ code.code }}
+                                            </option>
+                                        {% endfor %}
+
+                                    </select>
+
+                                    {% if erreurs.code_creation %}
+                                        <div class="invalid-feedback">
+                                            {{ erreurs.code_creation }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- STATUT -->
+                                <div class="mb-3">
+                                    <label class="form-label">Statut</label>
+
+                                    <select
+                                        name="statut"
+                                        id="status-field"
+                                        class="form-control {% if erreurs.statut %}is-invalid{% endif %}">
+
+                                        <option value="">------</option>
+                                        <option value="actif" {% if valeurs.statut == "actif" %}selected{% endif %}>Actif</option>
+                                        <option value="suspendu" {% if valeurs.statut == "suspendu" %}selected{% endif %}>Suspendu</option>
+                                        <option value="en_attente" {% if valeurs.statut == "en_attente" %}selected{% endif %}>En attente</option>
+
+                                    </select>
+
+                                    {% if erreurs.statut %}
+                                        <div class="invalid-feedback">
+                                            {{ erreurs.statut }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-success">Enregistrer</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const modal = new bootstrap.Modal(document.getElementById('showModal'));
+
+    /* Si erreur -> réouvrir modal */
+    {% if erreurs %}
+        modal.show();
+    {% endif %}
+
+    const editButtons = document.querySelectorAll('.edit-item-btn');
+
+    editButtons.forEach(btn => {
+
+        btn.addEventListener('click', function(){
+
+            document.getElementById('id-field').value = this.dataset.id;
+            document.getElementById('email-field').value = this.dataset.email;
+            document.getElementById('telephone-field').value = this.dataset.telephone;
+            document.getElementById('status-field').value = this.dataset.statut;
+
+            document.getElementById('email-field').readOnly = true;
+            document.getElementById('telephone-field').readOnly = true;
+            document.getElementById('code-field').disabled = true;
+
+        });
+
+    });
+
+    document.getElementById('create-btn').addEventListener('click', function(){
+
+        document.getElementById('id-field').value = "";
+        document.getElementById('email-field').value = "";
+        document.getElementById('telephone-field').value = "";
+        document.getElementById('code-field').value = "";
+        document.getElementById('status-field').value = "";
+
+        document.getElementById('email-field').readOnly = false;
+        document.getElementById('telephone-field').readOnly = false;
+        document.getElementById('code-field').disabled = false;
+
+    });
+
+});
+
+</script>
+
+{% endblock contenu %}

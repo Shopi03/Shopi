@@ -1,29 +1,21 @@
 # fichier : shopi_app/urls.py
 
 from django.urls import path
-from . import views
+from Partenaire.view import views 
 
 urlpatterns = [
     # Afficher tous les partenaires
-    path('', views.dashboard_partenaire, name='dashboard_partenaire'),
+    path('tableau_de_bord_partenaire', views.tableau_de_bord_partenaire, name='tableau_de_bord_partenaire'),
 
-    # Créer un nouveau partenaire
-    path('creer_partenaire/', views.creer_partenaire, name='creer_partenaire'),
 
-    # Modifier un partenaire existant (on passe l'ID du partenaire)
-    path('modifier/<int:partenaire_id>/', views.modifier_partenaire, name='modifier_partenaire'),
+    path("gestion_entreprise/", views.gestion_entreprise_partenaire, name="gestion_entreprise_partenaire"),
+    path("gestion_livreur/", views.gestion_livreur_partenaire, name="gestion_livreur_partenaire"),
 
-    # Supprimer un partenaire (on passe l'ID du partenaire)
-    path('supprimer/<int:partenaire_id>/', views.supprimer_partenaire, name='supprimer_partenaire'),
 
-    # Se connecter au tableau de bord du partenaire
-    path('connexion/', views.login_partenaire, name='login_partenaire'),
 
-    # Permettre au partenaire de se déconnecter
-    path('deconnexion/', views.logout_partenaire, name='logout_partenaire'),
 
-    # Processus d'inscription en plusieurs étapes
-    # path('inscription/1/', views.inscription1, name='inscription1'),
-    path('ajax/verifier-email/', views.verifier_email, name='verifier_email'),
-    path('ajax/verifier-pseudo/', views.verifier_pseudo, name='verifier_pseudo'),
+    path("profil_partenaire/", views.profil_partenaire, name="profil_partenaire"),
+    path("parametre_profil/", views.parametre_profil_partenaire, name="parametre_profil_partenaire"),
+
+
 ]

@@ -1,0 +1,161 @@
+{% load static %}
+
+<!doctype html>
+<html lang="fr" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default">
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>Réinitialiser le mot de passe | Velzon - Modèle Admin & Tableau de bord</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Modèle premium polyvalent pour administration et tableau de bord" name="description" />
+    <meta content="Themesbrand" name="author" />
+    
+    <!-- Favicon de l'application -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    <!-- Configuration du layout -->
+    <script src="{% static 'assets/js/layout.js' %}"></script>
+    
+    <!-- CSS Bootstrap -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    
+    <!-- CSS Icônes -->
+    <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    
+    <!-- CSS Principal -->
+    <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet" type="text/css" />
+    
+    <!-- CSS Personnalisé -->
+    <link href="{% static 'assets/css/custom.min.css' %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+    <div class="auth-page-wrapper pt-5">
+        
+        <!-- Arrière-plan de la page d'authentification -->
+        <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
+            <div class="bg-overlay"></div>
+
+            <div class="shape">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1440 120">
+                    <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Contenu de la page -->
+        <div class="auth-page-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center mt-sm-5 mb-4 text-white-50">
+                            <div>
+                                <a href="index.html" class="d-inline-block auth-logo">
+                                    <img src="{% static 'assets/images/logo-light.png' %}" alt="" height="20">
+                                </a>
+                            </div>
+                            <p class="mt-3 fs-15 fw-medium">Modèle premium Admin & Tableau de bord</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card mt-4 card-bg-fill">
+
+                            <div class="card-body p-4">
+                                <div class="text-center mt-2">
+                                    <h5 class="text-primary">Mot de passe oublié ?</h5>
+                                    <p class="text-muted">Réinitialisez votre mot de passe avec Velzon</p>
+
+                                    <lord-icon src="https://cdn.lordicon.com/rhvddzym.json"
+                                               trigger="loop"
+                                               colors="primary:#0ab39c"
+                                               class="avatar-xl">
+                                    </lord-icon>
+                                </div>
+
+                                <div class="alert border-0 alert-warning text-center mb-2 mx-2" role="alert">
+                                    Entrez votre adresse e-mail et les instructions vous seront envoyées !
+                                </div>
+
+                                <div class="p-2">
+
+                                    {% if messages %}
+                                        {% for message_mot_de_passe_oubliez in messages %}
+                                            <div class="alert alert-info text-center">
+                                                {{ message_mot_de_passe_oubliez }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    <form method="POST" action="{% url 'mot_de_passe_oubliez' %}">
+                                        {% csrf_token %}
+
+                                        <div class="mb-4">
+                                            <label class="form-label">Adresse e-mail</label>
+                                            <input type="email" 
+                                                name="email"
+                                                class="form-control" 
+                                                placeholder="Entrez votre adresse e-mail"
+                                                required>
+                                        </div>
+
+                                        <div class="text-center mt-4">
+                                            <button class="btn btn-success w-100" type="submit">
+                                                Envoyer le lien de réinitialisation
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-center">
+                            <p class="mb-0">
+                                Attendez, je me souviens de mon mot de passe...
+                                <a href="{% url 'login'%}" class="fw-semibold text-primary text-decoration-underline">
+                                    Cliquez ici
+                                </a>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pied de page -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p class="mb-0 text-muted">
+                                &copy; <script>document.write(new Date().getFullYear())</script>
+                                Velzon. Conçu avec <i class="mdi mdi-heart text-danger"></i> par Themesbrand
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+    <script src="{% static 'assets/libs/feather-icons/feather.min.js' %}"></script>
+    <script src="{% static 'assets/js/pages/plugins/lord-icon-2.1.0.js' %}"></script>
+    <script src="{% static 'assets/js/plugins.js' %}"></script>
+
+    <!-- Particules JS -->
+    <script src="{% static 'assets/libs/particles.js/particles.js' %}"></script>
+    <script src="{% static 'assets/js/pages/particles.app.js' %}"></script>
+
+</body>
+</html>

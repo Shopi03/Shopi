@@ -1,26 +1,24 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password, check_password
+from django.conf import settings
 
 class Client(models.Model):
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    telephone = models.CharField(max_length=15)
-    date_inscription = models.DateField(auto_now_add=True)
-    actif = models.BooleanField(default=True)
-    password = models.CharField(max_length=128)
-    date_naissance = models.DateField(null=True, blank=True)
-    sexe = models.CharField(max_length=10, choices=[('homme', 'Homme'), ('femme', 'Femme')])
-    profil = models.ImageField(upload_to='media/client_profiles/', null=True, blank=True)
+    """
+    Profil spécifique pour le rôle Client.
+    Toutes les informations sensibles (email, mot de passe, nom, prénom, téléphone...) sont dans User central.
+    """
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,  # Lien vers le User central
+        on_delete=models.CASCADE,
+        related_name="profil_client"
+    )
 
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
-
-    def check_password(self, raw_password):
-        return check_password(raw_password, self.password)
+    # Champs spécifiques au Client (exemple)
+    numero_client = models.CharField(max_length=50, blank=True, null=True)
+    points_fidelite = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.nom} {self.prenom}"
+        # Affiche le nom complet si présent, sinon l'email
+        return f"{self.user.nom} {self.user.prenom}" if self.user.nom and self.user.prenom else self.user.email
 
     class Meta:
         verbose_name = "Client"
